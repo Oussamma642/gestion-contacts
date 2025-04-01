@@ -15,9 +15,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
+    Route::get('/dashboard', function(){
         return view('dashboard');
-    })->name('dashboard');
+    });
+    // Route::get('/dashboard', [App\Http\Controllers\ContactController::class, 'index'])->name('dashboard');
+    // Route::resource('contacts', App\Http\Controllers\ContactController::class);
 });
 
 Route::get('/', function () {
