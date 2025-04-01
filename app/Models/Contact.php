@@ -28,13 +28,19 @@ class Contact extends Model
         return $this->belongsTo(Category::class);
     }
 
+    // public function relatedPersons()
+    // {
+    //     return $this->belongsToMany(
+    //         Contact::class,  // Self-referencing
+    //         'related_persons', // Pivot table name
+    //         'personA',  // Foreign key for this contact
+    //         'personB'   // Foreign key for the related contact
+    //     )->withPivot('type_relation_id'); // Include relation type
+    // }
+
     public function relatedPersons()
     {
-        return $this->belongsToMany(
-            Contact::class,  // Self-referencing
-            'related_persons', // Pivot table name
-            'personA',  // Foreign key for this contact
-            'personB'   // Foreign key for the related contact
-        )->withPivot('type_relation_id'); // Include relation type
+        return $this->hasMany(RelatedPerson::class, 'personA');
     }
+
 }

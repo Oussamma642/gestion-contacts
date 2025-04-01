@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use App\Models\RelatedPerson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +19,8 @@ class ContactController extends Controller
             $query->where('category', $request->category);
         }
 
-        $contacts = $query->latest()->get();
+        // $contacts = $query->latest()->get();
+        $contacts = $query->where('created_at', '>=', now()->subDays(7))->latest()->get();
 
         $stats = [
             'ami'           => Contact::where('user_id', Auth::id())->where('category', 'ami')->count(),
@@ -30,6 +32,16 @@ class ContactController extends Controller
         return view('dashboard', compact('contacts', 'stats'));
     }
 
+    public function relatedPersons($id)
+    {
+        // Fetch related persons with their contacts and relation type
+        $relatedPersons = RelatedPerson::where('personA', $id)
+            ->with(['personB', 'typeRelation']) // Load related contact and relation type
+            ->get();
+    
+        return view('relatedpersons', compact('relatedPersons'));
+    }
+    
     /**
      * Show the form for creating a new resource.
      */

@@ -52,9 +52,11 @@
         </div> <!-- Liste des contacts -->
         <div class="bg-white rounded-lg shadow">
             <div class="p-4 sm:p-6 border-b border-gray-200">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-3 sm:space-y-0">
+                <div
+                    class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-3 sm:space-y-0">
                     <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Vos contacts récents</h2>
-                    <button onclick="openAddModal()" class="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <button onclick="openAddModal()"
+                        class="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                         <i class="fas fa-plus mr-2"></i>Nouveau contact
                     </button>
                 </div>
@@ -64,11 +66,21 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
-                            <th class="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                            <th class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Téléphone</th>
-                            <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catégorie</th>
-                            <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            <th
+                                class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Nom</th>
+                            <th
+                                class="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Email</th>
+                            <th
+                                class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Téléphone</th>
+                            <th
+                                class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Catégorie</th>
+                            <th
+                                class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -77,7 +89,8 @@
                             <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10">
-                                        <div class="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                        <div
+                                            class="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gray-200 flex items-center justify-center">
                                             <i class="fas fa-user text-gray-500 text-sm sm:text-base"></i>
                                         </div>
                                     </div>
@@ -104,10 +117,17 @@
                                 </span>
                             </td>
                             <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <button onclick="openEditModal({{ $contact->id }})" class="text-blue-600 hover:text-blue-900 mr-3">
+                                <button onclick="openEditModal({{ $contact->id }})"
+                                    class="text-blue-600 hover:text-blue-900 mr-3" title="Modifier">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button onclick="deleteContact({{ $contact->id }})" class="text-red-600 hover:text-red-900">
+                                <a href="{{ route('persons.RelatedPersons', $contact->id) }}"
+                                    class="text-purple-600 hover:text-purple-900 mr-3" title="Personnes liées">
+                                    <i class="fas fa-people-arrows"></i>
+                                </a>
+
+                                <button onclick="deleteContact({{ $contact->id }})"
+                                    class="text-red-600 hover:text-red-900" title="Supprimer">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
@@ -137,25 +157,29 @@
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
                         Nom complet
                     </label>
-                    <input type="text" name="name" id="name" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <input type="text" name="name" id="name" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
                         Email
                     </label>
-                    <input type="email" name="email" id="email" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <input type="email" name="email" id="email" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">
                         Téléphone
                     </label>
-                    <input type="tel" name="phone" id="phone" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <input type="tel" name="phone" id="phone" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="category">
                         Catégorie
                     </label>
-                    <select name="category" id="category" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <select name="category" id="category" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         <option value="ami">Ami</option>
                         <option value="famille">Famille</option>
                         <option value="professionnel">Professionnel</option>
@@ -163,10 +187,12 @@
                     </select>
                 </div>
                 <div class="flex justify-end">
-                    <button type="button" onclick="closeModal()" class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                    <button type="button" onclick="closeModal()"
+                        class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                         Annuler
                     </button>
-                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <button type="submit"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                         Enregistrer
                     </button>
                 </div>
@@ -176,68 +202,76 @@
 </div>
 
 <script>
-    function openAddModal() {
-        document.getElementById('modalTitle').textContent = 'Nouveau contact';
-        document.getElementById('contactForm').reset();
-        document.getElementById('contactForm').action = "{{ route('contacts.store') }}";
-        document.getElementById('contactModal').classList.remove('hidden');
+function openAddModal() {
+    document.getElementById('modalTitle').textContent = 'Nouveau contact';
+    document.getElementById('contactForm').reset();
+    document.getElementById('contactForm').action = "{{ route('contacts.store') }}";
+    document.getElementById('contactModal').classList.remove('hidden');
+}
+
+function openEditModal(contactId) {
+    document.getElementById('modalTitle').textContent = 'Modifier le contact';
+
+    // Ajuster le formulaire pour la méthode PUT
+    const form = document.getElementById('contactForm');
+    form.action = `/contacts/${contactId}`;
+
+    // Ajouter le method spoofing pour PUT
+    let methodInput = document.querySelector('input[name="_method"]');
+    if (!methodInput) {
+        methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        form.appendChild(methodInput);
     }
+    methodInput.value = 'PUT';
 
-    function openEditModal(contactId) {
-        document.getElementById('modalTitle').textContent = 'Modifier le contact';
+    // Charger les données du contact
+    fetch(`/contacts/${contactId}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('name').value = data.name;
+            document.getElementById('email').value = data.email;
+            document.getElementById('phone').value = data.phone;
+            document.getElementById('category').value = data.category;
+            document.getElementById('contactModal').classList.remove('hidden');
+        });
+}
 
-        // Ajuster le formulaire pour la méthode PUT
-        const form = document.getElementById('contactForm');
+function closeModal() {
+    document.getElementById('contactModal').classList.add('hidden');
+}
+
+function deleteContact(contactId) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce contact ?')) {
+        // Créer un formulaire pour la soumission
+        const form = document.createElement('form');
+        form.method = 'POST';
         form.action = `/contacts/${contactId}`;
 
-        // Ajouter le method spoofing pour PUT
-        let methodInput = document.querySelector('input[name="_method"]');
-        if (!methodInput) {
-            methodInput = document.createElement('input');
-            methodInput.type = 'hidden';
-            methodInput.name = '_method';
-            form.appendChild(methodInput);
-        }
-        methodInput.value = 'PUT';
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = '{{ csrf_token() }}';
 
-        // Charger les données du contact
-        fetch(`/contacts/${contactId}`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('name').value = data.name;
-                document.getElementById('email').value = data.email;
-                document.getElementById('phone').value = data.phone;
-                document.getElementById('category').value = data.category;
-                document.getElementById('contactModal').classList.remove('hidden');
-            });
+        const methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        methodInput.value = 'DELETE';
+
+        form.appendChild(csrfInput);
+        form.appendChild(methodInput);
+        document.body.appendChild(form);
+        form.submit();
     }
+}
 
-    function closeModal() {
-        document.getElementById('contactModal').classList.add('hidden');
-    }
-
-    function deleteContact(contactId) {
-        if (confirm('Êtes-vous sûr de vouloir supprimer ce contact ?')) {
-            // Créer un formulaire pour la soumission
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = `/contacts/${contactId}`;
-
-            const csrfInput = document.createElement('input');
-            csrfInput.type = 'hidden';
-            csrfInput.name = '_token';
-            csrfInput.value = '{{ csrf_token() }}';
-
-            const methodInput = document.createElement('input');
-            methodInput.type = 'hidden';
-            methodInput.name = '_method';
-            methodInput.value = 'DELETE';
-
-            form.appendChild(csrfInput);
-            form.appendChild(methodInput);
-            document.body.appendChild(form);
-            form.submit();
-        }
-    }
+function showRelatedPersons(contactId) {
+    // Cette fonction afficherait normalement une fenêtre modale ou redirigerait
+    // vers une page montrant les personnes liées au contact
+    alert(`Affichage des personnes liées au contact #${contactId}`);
+    // Ici vous pourriez implémenter un appel fetch pour récupérer et afficher
+    // les personnes liées à ce contact
+}
 </script>
 @endsection
