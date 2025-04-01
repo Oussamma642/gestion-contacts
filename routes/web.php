@@ -14,16 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', function () {
+    return view('home');
+});
+
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function(){
         return view('dashboard');
     });
-    // Route::get('/dashboard', [App\Http\Controllers\ContactController::class, 'index'])->name('dashboard');
-    // Route::resource('contacts', App\Http\Controllers\ContactController::class);
-});
-
-Route::get('/', function () {
-    return view('home');
 });
 
 // Routes d'authentification
