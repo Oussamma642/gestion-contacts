@@ -9,36 +9,49 @@
             </h2>
             <p class="mt-2 text-center text-sm text-gray-600">
                 Ou
-                <a href="{{'/login'}}" class="font-medium text-blue-600 hover:text-blue-500">
+                <a href="{{ route('login') }}" class="font-medium text-blue-600 hover:text-blue-500">
                     connectez-vous à votre compte existant
                 </a>
             </p>
         </div>
-        <form class="mt-8 space-y-6" action="#" method="POST">
+        <form class="mt-8 space-y-6" action="{{ route('register') }}" method="POST">
+            @csrf
             <div class="rounded-md shadow-sm -space-y-px">
                 <div>
                     <label for="name" class="sr-only">Nom complet</label>
                     <input id="name" name="name" type="text" required
-                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                        placeholder="Nom complet">
+                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm @error('name') border-red-500 @enderror"
+                        placeholder="Nom complet" value="{{ old('name') }}">
+                    @error('name')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label for="email" class="sr-only">Adresse email</label>
                     <input id="email" name="email" type="email" required
-                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                        placeholder="Adresse email">
+                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm @error('email') border-red-500 @enderror"
+                        placeholder="Adresse email" value="{{ old('email') }}">
+                    @error('email')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label for="phone" class="sr-only">Numéro de téléphone</label>
                     <input id="phone" name="phone" type="tel" required
-                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                        placeholder="Numéro de téléphone">
+                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm @error('phone') border-red-500 @enderror"
+                        placeholder="Numéro de téléphone" value="{{ old('phone') }}">
+                    @error('phone')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label for="password" class="sr-only">Mot de passe</label>
                     <input id="password" name="password" type="password" required
-                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm @error('password') border-red-500 @enderror"
                         placeholder="Mot de passe">
+                    @error('password')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label for="password_confirmation" class="sr-only">Confirmer le mot de passe</label>

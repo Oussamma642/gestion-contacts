@@ -9,32 +9,39 @@
             </h2>
             <p class="mt-2 text-center text-sm text-gray-600">
                 Ou
-                <a href="{{'/register'}}" class="font-medium text-blue-600 hover:text-blue-500">
+                <a href="{{ route('register') }}" class="font-medium text-blue-600 hover:text-blue-500">
                     créez un nouveau compte
                 </a>
             </p>
         </div>
-        <form class="mt-8 space-y-6" action="#" method="POST">
+        <form class="mt-8 space-y-6" action="{{ route('login') }}" method="POST">
+            @csrf
             <div class="rounded-md shadow-sm -space-y-px">
                 <div>
                     <label for="email" class="sr-only">Adresse email</label>
                     <input id="email" name="email" type="email" required
-                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                        placeholder="Adresse email">
+                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm @error('email') border-red-500 @enderror"
+                        placeholder="Adresse email" value="{{ old('email') }}">
+                    @error('email')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label for="password" class="sr-only">Mot de passe</label>
                     <input id="password" name="password" type="password" required
-                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm @error('password') border-red-500 @enderror"
                         placeholder="Mot de passe">
+                    @error('password')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                 <div class="flex items-center">
-                    <input id="remember-me" name="remember-me" type="checkbox"
+                    <input id="remember" name="remember" type="checkbox"
                         class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                    <label for="remember-me" class="ml-2 block text-sm text-gray-900">
+                    <label for="remember" class="ml-2 block text-sm text-gray-900">
                         Se souvenir de moi
                     </label>
                 </div>
