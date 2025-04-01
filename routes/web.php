@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,11 +19,9 @@ Route::get('/', function () {
     return view('home');
 });
 
-
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function(){
-        return view('dashboard');
-    });
+    Route::get('/dashboard', [ContactController::class, 'index'])->name('dashboard');
+    Route::resource('contacts', ContactController::class);
 });
 
 // Routes d'authentification
