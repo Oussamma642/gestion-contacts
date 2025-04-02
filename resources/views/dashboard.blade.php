@@ -121,6 +121,7 @@
                                     class="text-blue-600 hover:text-blue-900 mr-3" title="Modifier">
                                     <i class="fas fa-edit"></i>
                                 </button>
+                                <!-- Related contacts -->
                                 <a href="{{ route('persons.RelatedPersons', $contact->id) }}"
                                     class="text-purple-600 hover:text-purple-900 mr-3" title="Personnes liées">
                                     <i class="fas fa-people-arrows"></i>

@@ -31,23 +31,19 @@ class ContactController extends Controller
         return view('dashboard', compact('contacts', 'stats'));
     }
 
-    public function relatedPersons($id)
+
+    public function relatedContacts($id)
     {
-        // Fetch related persons with their contact details and relation type
-        $relatedPersons = Contact::select('contacts.name', 'contacts.email', 'contacts.phone', 'contacts.category', 'type_relations.type')
-            ->join('related_persons', 'related_persons.personA', '=', 'contacts.id')
-            ->join('type_relations', 'type_relations.id', '=', 'related_persons.type_relation_id')
-            ->where('related_persons.type_relation_id', $id)
-            ->get();
+        // Fetch all related contacts for personA, ensuring the contact is also associated with the authenticated user
+        $contacts = Contact::whereHas('relatedPersons', function ($query) use ($id) {
+            $query->where('related_persons.personA', $id);
+        })
+        ->where('user_id', auth()->id()) // Make sure the contact belongs to the authenticated user
+        ->get();
     
-        // Debugging: Check if data is retrieved
-        if ($relatedPersons->isEmpty()) {
-            dd("No related persons found for ID: $id");
-        }
-    
-        return view('relatedpersons', compact('relatedPersons'));
+        return view('relatedpersons', compact('contacts'));
     }
-    
+
     /**
      * Show the form for creating a new resource.
      */

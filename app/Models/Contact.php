@@ -1,7 +1,6 @@
 <?php
 namespace App\Models;
 
-use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,24 +22,11 @@ class Contact extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function category()
+    public function relatedContacts()
     {
-        return $this->belongsTo(Category::class);
-    }
-
-    // public function relatedPersons()
-    // {
-    //     return $this->belongsToMany(
-    //         Contact::class,  // Self-referencing
-    //         'related_persons', // Pivot table name
-    //         'personA',  // Foreign key for this contact
-    //         'personB'   // Foreign key for the related contact
-    //     )->withPivot('type_relation_id'); // Include relation type
-    // }
-
-    public function relatedPersons()
-    {
-        return $this->hasMany(RelatedPerson::class, 'personA');
+        return $this->belongsToMany(Contact::class, 'related_persons', 'personA', 'personB')
+            ->withPivot('type')
+            ->withTimestamps();
     }
 
 }
