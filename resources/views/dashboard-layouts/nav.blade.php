@@ -23,10 +23,14 @@
                 <div class="relative">
                     <button type="button"
                         class="flex items-center text-gray-700 hover:text-gray-900 focus:outline-none">
-                        <span class="hidden sm:inline-block mr-2">Nom d'utilisateur</span>
-                        <button class="text-sm text-gray-600 hover:text-gray-900">
-                            <i class="fas fa-sign-out-alt"></i>
-                        </button>
+                        <span class="hidden sm:inline-block mr-2">{{Auth::user()->name}}</span>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="text-sm text-gray-600 hover:text-gray-900">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </form>
+
                     </button>
                 </div>
             </div>

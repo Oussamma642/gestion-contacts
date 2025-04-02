@@ -120,6 +120,7 @@ class ContactController extends Controller
 
         $contact->delete();
 
-        return response()->json(['message' => 'Contact supprimé avec succès.']);
+        // return response()->json(['message' => 'Contact supprimé avec succès.']);
+        return redirect()->route('dashboard');
     }
 }
