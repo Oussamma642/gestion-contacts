@@ -24,6 +24,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/related-contacts/{id}', [ContactController::class, 'relatedContacts'])->name('persons.RelatedPersons');
 
     Route::resource('contacts', ContactController::class);
+
+    Route::get('/export-contacts', [ContactController::class, 'exportToExcel'])->name('export.contacts');
 });
 
 // Routes d'authentification

@@ -5,6 +5,10 @@ use App\Models\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\Exports\ContactsExport;
+use Maatwebsite\Excel\Facades\Excel;
+
+
 class ContactController extends Controller
 {
     /**
@@ -123,4 +127,14 @@ class ContactController extends Controller
         // return response()->json(['message' => 'Contact supprimé avec succès.']);
         return redirect()->route('dashboard');
     }
+
+
+    // Export to Excel
+
+    public function exportToExcel()
+    {
+        // Export the contacts to an Excel file
+        return Excel::download(new ContactsExport, 'contacts.xlsx');
+    }
+
 }
