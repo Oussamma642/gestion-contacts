@@ -21,7 +21,6 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [ContactController::class, 'index'])->name('dashboard');
-    // Route::get('/related-persons', [ContactController::class, 'relatedPersons'])->name('persons');
     Route::get('/related-persons/{id}', [ContactController::class, 'relatedPersons'])->name('persons.RelatedPersons');
 
     Route::resource('contacts', ContactController::class);

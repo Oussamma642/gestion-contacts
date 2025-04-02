@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('phone');
-            $table->enum('category', ['ami', 'famille', 'professionnel', 'collegue']);
+            $table->string('category')->default('ami');
             $table->timestamps();
         });
     }

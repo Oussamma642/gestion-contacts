@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
-use App\Models\RelatedPerson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,10 +33,17 @@ class ContactController extends Controller
 
     public function relatedPersons($id)
     {
-        // Fetch related persons with their contacts and relation type
-        $relatedPersons = RelatedPerson::where('personA', $id)
-            ->with(['personB', 'typeRelation']) // Load related contact and relation type
+        // Fetch related persons with their contact details and relation type
+        $relatedPersons = Contact::select('contacts.name', 'contacts.email', 'contacts.phone', 'contacts.category', 'type_relations.type')
+            ->join('related_persons', 'related_persons.personA', '=', 'contacts.id')
+            ->join('type_relations', 'type_relations.id', '=', 'related_persons.type_relation_id')
+            ->where('related_persons.type_relation_id', $id)
             ->get();
+    
+        // Debugging: Check if data is retrieved
+        if ($relatedPersons->isEmpty()) {
+            dd("No related persons found for ID: $id");
+        }
     
         return view('relatedpersons', compact('relatedPersons'));
     }
