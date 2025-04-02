@@ -31,16 +31,13 @@ class ContactController extends Controller
         return view('dashboard', compact('contacts', 'stats'));
     }
 
-
     public function relatedContacts($id)
     {
         // Fetch all related contacts for personA, ensuring the contact is also associated with the authenticated user
-        $contacts = Contact::whereHas('relatedPersons', function ($query) use ($id) {
+        $contacts = Contact::whereHas('relatedContacts', function ($query) use ($id) {
             $query->where('related_persons.personA', $id);
-        })
-        ->where('user_id', auth()->id()) // Make sure the contact belongs to the authenticated user
-        ->get();
-    
+        })->where('user_id', auth()->id())->get();
+
         return view('relatedpersons', compact('contacts'));
     }
 
