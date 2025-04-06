@@ -1,4 +1,15 @@
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const notification = document.getElementById('error-notification');
+    if (notification) {
+        // Auto-dismiss after 10 seconds
+        setTimeout(() => {
+            notification.classList.add('animate-fadeOut');
+            setTimeout(() => notification.remove(), 500);
+        }, 10000);
+    }
+});
+
 function rejectContact(shareId) {
     fetch(`/shared-contacts/${shareId}`, {
             method: 'DELETE',
