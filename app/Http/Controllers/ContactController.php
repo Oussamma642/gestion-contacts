@@ -1,13 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Exports\ContactsExport;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
-use App\Exports\ContactsExport;
 use Maatwebsite\Excel\Facades\Excel;
-
 
 class ContactController extends Controller
 {
@@ -75,14 +73,51 @@ class ContactController extends Controller
     /**
      * Display the specified resource.
      */
+    // public function show(Contact $contact)
+    // {
+    //     if ($contact->user_id !== Auth::id()) {
+    //         abort(403);
+    //     }
+
+    //     return response()->json($contact);
+    // }
+
+    // public function show(Contact $contact)
+    // {
+    //     $authUserId = Auth::id();
+
+    //     // Check if the contact belongs to the user or is shared with them
+    //     $isShared = \DB::table('share_contacts')
+    //         ->where('contact_id', $contact->id)
+    //         ->where('receiver_id', $authUserId)
+    //         ->where('status', 'pending') // Ensure it's pending
+    //         ->exists();
+
+    //     if ($contact->user_id !== $authUserId && ! $isShared) {
+    //         abort(403, 'You do not have access to this contact.');
+    //     }
+
+    //     return response()->json($contact);
+    // }
+
     public function show(Contact $contact)
     {
-        if ($contact->user_id !== Auth::id()) {
-            abort(403);
+        $authUserId = Auth::id();
+    
+        // Check if the contact belongs to the user or is shared with them
+        $isShared = \DB::table('share_contacts')
+            ->where('contact_id', $contact->id)
+            ->where('receiver_id', $authUserId)
+            ->where('status', 'pending') // Ensure it's pending
+            ->exists();
+    
+        if ($contact->user_id !== $authUserId && !$isShared) {
+            abort(403, 'You do not have access to this contact.');
         }
-
+    
         return response()->json($contact);
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -119,7 +154,6 @@ class ContactController extends Controller
         // return response()->json(['message' => 'Contact supprimé avec succès.']);
         return redirect()->route('dashboard');
     }
-
 
     // Export to Excel
 

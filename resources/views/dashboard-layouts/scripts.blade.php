@@ -11,15 +11,89 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// function acceptContact(contactId) {
+//     // Define the target form and action
+//     // document.getElementById('acceptSharedContactModal').classList.remove('hidden');
+//     document.getElementById('sharedContactsModal').classList.add('hidden');
+
+//     const form = document.getElementById('acceptForm');
+//     form.action = `/accept-shared-contact/${contactId}`;
+
+//     // Spoof the method if needed
+//     let methodInput = form.querySelector('input[name="_method"]');
+//     if (!methodInput) {
+//         methodInput = document.createElement('input');
+//         methodInput.type = 'hidden';
+//         methodInput.name = '_method';
+//         form.appendChild(methodInput);
+//     }
+//     methodInput.value = 'POST';
+
+//     // Fetch the contact details
+//     fetch(`/contacts/${contactId}`)
+//         .then(response => {
+//             if (!response.ok) {
+//                 throw new Error('Failed to fetch contact details.');
+//             }
+//             return response.json();
+//         })
+//         .then(data => {
+//             console.log(data); // Check the output
+//             document.getElementById('name').value = data.name;
+//             document.getElementById('email').value = data.email;
+//             document.getElementById('phone').value = data.phone;
+//             document.getElementById('category').value = data.category;
+//             document.getElementById('acceptSharedContactModal').classList.remove('hidden');
+//         })
+//         .catch(error => {
+//             console.error('Error fetching contact details:', error);
+//         });
+
+// }
+
+// function acceptContact(contactId) {
+//     document.getElementById('acceptSharedContactModal').classList.remove('hidden');
+//     document.getElementById('sharedContactsModal').classList.add('hidden');
+
+//     const form = document.getElementById('acceptForm');
+//     form.action = `/accept-shared-contact/${contactId}`;
+
+//     // Spoof the method if needed
+//     let methodInput = form.querySelector('input[name="_method"]');
+//     if (!methodInput) {
+//         methodInput = document.createElement('input');
+//         methodInput.type = 'hidden';
+//         methodInput.name = '_method';
+//         form.appendChild(methodInput);
+//     }
+//     methodInput.value = 'POST';
+
+//     fetch(`/contacts/${contactId}`)
+//         .then(response => {
+//             if (!response.ok) {
+//                 throw new Error('Failed to fetch contact details.');
+//             }
+//             return response.json();
+//         })
+//         .then(data => {
+//             console.log(data);
+//             document.getElementById('name').value = data.name;
+//             document.getElementById('email').value = data.email;
+//             document.getElementById('phone').value = data.phone;
+//             document.getElementById('category').value = data.category;
+//         })
+//         .catch(error => {
+//             console.error('Error fetching contact details:', error);
+//         });
+// }
+
+
 function acceptContact(contactId) {
-    // Define the target form and action
     document.getElementById('acceptSharedContactModal').classList.remove('hidden');
-    document.getElementById('sharedContactsModal').classList.add('hidden');
 
     const form = document.getElementById('acceptForm');
     form.action = `/accept-shared-contact/${contactId}`;
 
-    // Spoof the method if needed
     let methodInput = form.querySelector('input[name="_method"]');
     if (!methodInput) {
         methodInput = document.createElement('input');
@@ -29,15 +103,19 @@ function acceptContact(contactId) {
     }
     methodInput.value = 'POST';
 
-    // Fetch the contact details
     fetch(`/contacts/${contactId}`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch contact details.');
+            }
+            return response.json();
+        })
         .then(data => {
-            document.getElementById('name').value = data.name;
-            document.getElementById('email').value = data.email;
-            document.getElementById('phone').value = data.phone;
-            document.getElementById('category').value = data.category;
-            document.getElementById('acceptSharedContactModal').classList.remove('hidden');
+            console.log(data); // Check this in the console to confirm data structure
+            document.getElementById('name').value = data.name || '';
+            document.getElementById('email').value = data.email || '';
+            document.getElementById('phone').value = data.phone || '';
+            document.getElementById('category').value = data.category || 'ami';
         })
         .catch(error => {
             console.error('Error fetching contact details:', error);
@@ -259,7 +337,7 @@ function closeModal(modelType) {
 
     if (modelType === "acceptSharedContactModal") {
         document.getElementById(modelType).classList.add('hidden');
-        openSharedContactsModal()
+        openSharedContactsModal();
     }
     document.getElementById(modelType).classList.add('hidden');
 
