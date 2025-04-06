@@ -168,7 +168,12 @@
                         class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
                         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
                             <div class="mt-3">
+
                                 <h3 class="text-lg font-medium text-gray-900 mb-4" id="modalTitle">Select Users</h3>
+
+                                <!-- Auth user -->
+                                <input type="hidden" id="authUserId" value="{{ auth()->id() }}">
+
                                 <!-- Users Dropdown -->
                                 <label for="receiver_id" class="block text-sm font-medium text-gray-700">Users</label>
                                 <select name="receiver_id" id="userDropdown"
@@ -263,17 +268,15 @@
 
 <script>
 function openUsersModal() {
-
-
-    // Get all contact checkboxes
-    const selectedContacts = document.querySelectorAll(
-    'input[name="contact_ids[]"]:checked'); // Select only checked boxes
-
-    // Check if at least one contact is selected
+    // Show the modal only if at least one contact is selected
+    const selectedContacts = document.querySelectorAll('input[name="contact_ids[]"]:checked');
     if (selectedContacts.length === 0) {
         alert('Please select at least one contact to share.');
-        return; // Exit the function if no contact is selected
+        return;
     }
+
+    // Fetch the authenticated user's ID (you need to pass it from your backend to the frontend)
+    const authUserId = document.getElementById('authUserId').value; // Example of how to pass it to your frontend
 
     // Show the modal
     document.getElementById('usersModal').classList.remove('hidden');
@@ -285,11 +288,13 @@ function openUsersModal() {
             const userDropdown = document.getElementById('userDropdown');
             userDropdown.innerHTML = ''; // Clear any existing options
 
-            // Populate the dropdown with user data
+            // Populate the dropdown with user data, excluding the authenticated user
             users.forEach(user => {
-                userDropdown.innerHTML += `
-                    <option value="${user.id}">(${user.email})</option>
-                `;
+                if (user.id !== parseInt(authUserId)) {
+                    userDropdown.innerHTML += `
+                        <option value="${user.id}">${user.name} (${user.email})</option>
+                    `;
+                }
             });
         })
         .catch(error => {
