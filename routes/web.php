@@ -32,6 +32,7 @@ Route::middleware(['auth'])->group(function () {
     // Routes for sharing contacts:
     Route::post('/share', [ShareController::class, 'share'])->name('share.contacts');
     Route::post('/share/update-status', [ShareController::class, 'updateStatus'])->name('share.updateStatus');
+    Route::get('/shared-contacts', [ShareController::class, 'getPendingSharedContacts']);
 });
 
 // Routes d'authentification

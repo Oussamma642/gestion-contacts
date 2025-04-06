@@ -32,4 +32,17 @@ class ShareController extends Controller
 
         return redirect()->back()->with('success', 'Status updated successfully!');
     }
+
+    public function getPendingSharedContacts()
+    {
+        $sharedContacts = \DB::table('share_contacts')
+            ->join('contacts', 'share_contacts.contact_id', '=', 'contacts.id')
+            ->join('users', 'share_contacts.sender_id', '=', 'users.id')
+            ->where('share_contacts.receiver_id', auth()->id())
+            ->where('share_contacts.status', 'pending')
+            ->select('contacts.name', 'users.name as sender_name')
+            ->get();
+
+        return response()->json($sharedContacts);
+    }
 }

@@ -265,8 +265,73 @@
 </div>
 
 
+<div id="sharedContactsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Shared Contacts</h3>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th
+                            class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Contact</th>
+                        <th
+                            class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Sender</th>
+                        <th
+                            class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="sharedContactsTable" class="bg-white divide-y divide-gray-200">
+                    <!-- Shared Contacts will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+        <div class="flex justify-end mt-4">
+            <button type="button" onclick="closeModal('sharedContactsModal')"
+                class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
 
 <script>
+function openSharedContactsModal() {
+    const modal = document.getElementById('sharedContactsModal');
+    modal.classList.remove('hidden');
+
+    fetch('/shared-contacts') // Make sure this API route exists
+        .then(response => response.json())
+        .then(sharedContacts => {
+            const tableBody = document.getElementById('sharedContactsTable');
+            tableBody.innerHTML = ''; // Clear previous data
+
+            // Populate the table with shared contacts
+            sharedContacts.forEach(contact => {
+                tableBody.innerHTML += `
+                    <tr>
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${contact.name}</td>
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${contact.sender_name}</td>
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
+                            <button class="bg-blue-500 text-white px-2 py-1 rounded">Accept</button>
+                            <button class="bg-red-500 text-white px-2 py-1 rounded">Reject</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching shared contacts:', error);
+        });
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+}
+
 function openUsersModal() {
     // Show the modal only if at least one contact is selected
     const selectedContacts = document.querySelectorAll('input[name="contact_ids[]"]:checked');
@@ -419,4 +484,5 @@ function showRelatedPersons(contactId) {
     // les personnes liées à ce contact
 }
 </script>
+
 @endsection

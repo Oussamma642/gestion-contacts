@@ -13,6 +13,7 @@
         sidebar.classList.toggle('-translate-x-full');
     }
     </script>
+
 </head>
 
 <body class="bg-gray-100">
@@ -29,6 +30,8 @@
             @yield('content')
         </div>
     </div>
+
+    <!-- <script src="{{ asset('js/dashboard.js') }}"></script> -->
 </body>
 
 </html>
