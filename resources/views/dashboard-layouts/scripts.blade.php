@@ -14,6 +14,19 @@ function rejectContact(shareId) {
                 if (row) {
                     row.remove();
                 }
+
+                // Decrement the pending count
+                const countBadge = document.getElementById('sharedContactsCount');
+                let pendingCount = parseInt(countBadge.textContent);
+                if (!isNaN(pendingCount) && pendingCount > 0) {
+                    pendingCount -= 1;
+                    countBadge.textContent = pendingCount;
+
+                    // Hide the badge if count reaches zero
+                    if (pendingCount === 0) {
+                        countBadge.classList.add('hidden');
+                    }
+                }
             } else {
                 console.error('Failed to reject contact');
             }
