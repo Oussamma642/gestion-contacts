@@ -22,12 +22,18 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+
+    // Get all the contacts
     Route::get('/dashboard', [ContactController::class, 'index'])->name('dashboard');
+    // Get all the related contacts
     Route::get('/related-contacts/{id}', [ContactController::class, 'relatedContacts'])->name('persons.RelatedPersons');
+    // Crud ob Contacts [Updating, Delete]
     Route::resource('contacts', ContactController::class);
-    // Route::resource('users', UserController::class);
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+
+    // Exporting contacts to excel format
     Route::get('/export-contacts', [ContactController::class, 'exportToExcel'])->name('export.contacts');
+
+    Route::get('/users', [UserController::class, 'index']);
 
     // Routes for sharing contacts:
     Route::post('/share', [ShareController::class, 'share'])->name('share.contacts');

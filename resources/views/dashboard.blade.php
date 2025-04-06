@@ -141,7 +141,7 @@
                                     </span>
                                 </td>
                                 <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <button onclick="openEditModal({{ $contact->id }})"
+                                    <button type="button" onclick="openEditModal({{ $contact->id }})"
                                         class="text-blue-600 hover:text-blue-900 mr-3" title="Modifier">
                                         <i class="fas fa-edit"></i>
                                     </button>
@@ -149,7 +149,7 @@
                                         class="text-purple-600 hover:text-purple-900 mr-3" title="Personnes liées">
                                         <i class="fas fa-people-arrows"></i>
                                     </a>
-                                    <button onclick="deleteContact({{ $contact->id }})"
+                                    <button type="button" onclick="deleteContact({{ $contact->id }})"
                                         class="text-red-600 hover:text-red-900" title="Supprimer">
                                         <i class="fas fa-trash"></i>
                                     </button>
@@ -264,23 +264,26 @@
     </div>
 </div>
 
-
+<!-- Modal for the shared contacts -->
 <div id="sharedContactsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+    <div class="relative top-20 mx-auto p-5 border w-[600px] h-[500px] shadow-lg rounded-md bg-white">
         <h3 class="text-lg font-medium text-gray-900 mb-4">Shared Contacts</h3>
-        <div class="overflow-x-auto">
+        <div class="overflow-y-auto h-[380px]">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
                         <th
                             class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Contact</th>
+                            Contact
+                        </th>
                         <th
                             class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Sender</th>
+                            Sender
+                        </th>
                         <th
                             class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Actions</th>
+                            Actions
+                        </th>
                     </tr>
                 </thead>
                 <tbody id="sharedContactsTable" class="bg-white divide-y divide-gray-200">
@@ -288,7 +291,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="flex justify-end mt-4">
+        <div class="flex justify-end mt-1">
             <button type="button" onclick="closeModal('sharedContactsModal')"
                 class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                 Close
@@ -296,7 +299,6 @@
         </div>
     </div>
 </div>
-
 
 <script>
 function openSharedContactsModal() {
@@ -314,7 +316,7 @@ function openSharedContactsModal() {
                 tableBody.innerHTML += `
                     <tr>
                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${contact.name}</td>
-                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${contact.sender_name}</td>
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${contact.sender_name} ${contact.id}</td>
                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
                             <button class="bg-blue-500 text-white px-2 py-1 rounded">Accept</button>
                             <button class="bg-red-500 text-white px-2 py-1 rounded">Reject</button>

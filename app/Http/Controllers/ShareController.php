@@ -40,7 +40,7 @@ class ShareController extends Controller
             ->join('users', 'share_contacts.sender_id', '=', 'users.id')
             ->where('share_contacts.receiver_id', auth()->id())
             ->where('share_contacts.status', 'pending')
-            ->select('contacts.name', 'users.name as sender_name')
+            ->select('contacts.id','contacts.name', 'users.name as sender_name')
             ->get();
 
         return response()->json($sharedContacts);
