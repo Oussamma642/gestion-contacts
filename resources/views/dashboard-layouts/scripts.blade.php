@@ -3,7 +3,7 @@ function openSharedContactsModal() {
     const modal = document.getElementById('sharedContactsModal');
     modal.classList.remove('hidden');
 
-    fetch('/shared-contacts') // Make sure this API route exists
+    fetch('/shared-contacts') // Fetch pending shared contacts
         .then(response => response.json())
         .then(sharedContacts => {
             const tableBody = document.getElementById('sharedContactsTable');
@@ -14,10 +14,14 @@ function openSharedContactsModal() {
                 tableBody.innerHTML += `
                     <tr>
                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${contact.name}</td>
-                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${contact.sender_name} ${contact.id}</td>
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${contact.sender_name} Contact Id: ${contact.id} Shared-Contact Id: ${contact.share_id}</td>
                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
-                            <button class="bg-blue-500 text-white px-2 py-1 rounded">Accept</button>
-                            <button class="bg-red-500 text-white px-2 py-1 rounded">Reject</button>
+                            <button type='button' class="bg-blue-500 text-white px-2 py-1 rounded">Accept</button>
+                            <form action='/shared-contacts/${contact.share_id}' method="post" class="inline">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded">Reject</button>
+                            </form>
                         </td>
                     </tr>
                 `;
@@ -27,6 +31,7 @@ function openSharedContactsModal() {
             console.error('Error fetching shared contacts:', error);
         });
 }
+
 
 // Count Pending Shared Contacts
 function fetchSharedContactsCount() {

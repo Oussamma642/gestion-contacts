@@ -40,9 +40,15 @@ class ShareController extends Controller
             ->join('users', 'share_contacts.sender_id', '=', 'users.id')
             ->where('share_contacts.receiver_id', auth()->id())
             ->where('share_contacts.status', 'pending')
-            ->select('contacts.id','contacts.name', 'users.name as sender_name')
+            ->select('share_contacts.id as share_id','contacts.id','contacts.name', 'users.name as sender_name')
             ->get();
 
         return response()->json($sharedContacts);
+    }
+
+    public function reject(string $id)
+    {
+        \DB::table('share_contacts')->where('id', $id)->delete();
+        return response()->json(['success' => true, 'message' => 'Shared contact rejected successfully.']);
     }
 }

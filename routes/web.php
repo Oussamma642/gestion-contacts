@@ -35,10 +35,17 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/users', [UserController::class, 'index']);
 
-    // Routes for sharing contacts:
+    // -----------------------------Routes for sharing contacts:
+        // Route for the List of shared contacts
     Route::post('/share', [ShareController::class, 'share'])->name('share.contacts');
+        // Route for updating shared-contacts status
     Route::post('/share/update-status', [ShareController::class, 'updateStatus'])->name('share.updateStatus');
+        // Route to get number of pendign shared-contacts
     Route::get('/shared-contacts', [ShareController::class, 'getPendingSharedContacts']);
+
+    // Route for rejecting a shared-contact
+
+    Route::delete('/shared-contacts/{id}', [ShareController::class, 'reject']);
 });
 
 // Routes d'authentification
