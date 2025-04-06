@@ -263,6 +263,18 @@
 
 <script>
 function openUsersModal() {
+
+
+    // Get all contact checkboxes
+    const selectedContacts = document.querySelectorAll(
+    'input[name="contact_ids[]"]:checked'); // Select only checked boxes
+
+    // Check if at least one contact is selected
+    if (selectedContacts.length === 0) {
+        alert('Please select at least one contact to share.');
+        return; // Exit the function if no contact is selected
+    }
+
     // Show the modal
     document.getElementById('usersModal').classList.remove('hidden');
 
