@@ -18,13 +18,18 @@
                 <span class="ml-2 text-lg sm:text-xl font-bold text-gray-800">ContactPro</span>
             </div>
 
-            <!-- Shared Contacts Icon -->
-            <div class="flex items-center">
+            <!-- Shared Contacts Icon with Badge -->
+            <div class="flex items-center relative">
                 <button type="button" onclick="openSharedContactsModal()"
                     class="text-gray-700 hover:text-gray-900 focus:outline-none mx-3">
                     <i class="fas fa-share-alt text-xl sm:text-2xl"></i>
                     <span class="hidden sm:inline-block ml-2 text-sm font-medium">Shared Contacts</span>
                 </button>
+                <!-- Pending Count Badge -->
+                <span id="sharedContactsCount"
+                    class="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full -mt-1 -mr-2">
+                    0
+                </span>
             </div>
 
             <!-- Menu utilisateur -->

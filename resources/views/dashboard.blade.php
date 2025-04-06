@@ -217,6 +217,30 @@ function openSharedContactsModal() {
         });
 }
 
+// Count Pending Shared Contacts
+function fetchSharedContactsCount() {
+    fetch('/shared-contacts') // API to get pending shared contacts
+        .then(response => response.json())
+        .then(sharedContacts => {
+            const pendingCount = sharedContacts.length; // Count the pending contacts
+            const countBadge = document.getElementById('sharedContactsCount');
+            countBadge.textContent = pendingCount;
+
+            // Hide the badge if there are no pending contacts
+            if (pendingCount === 0) {
+                countBadge.classList.add('hidden');
+            } else {
+                countBadge.classList.remove('hidden');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching shared contacts count:', error);
+        });
+}
+
+// Call the function when the page loads
+document.addEventListener('DOMContentLoaded', fetchSharedContactsCount);
+
 function closeModal(modalId) {
     document.getElementById(modalId).classList.add('hidden');
 }
