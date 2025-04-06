@@ -48,7 +48,11 @@ class ShareController extends Controller
 
     public function reject(string $id)
     {
-        \DB::table('share_contacts')->where('id', $id)->delete();
-        return response()->json(['success' => true, 'message' => 'Shared contact rejected successfully.']);
+        $deleted = \DB::table('share_contacts')->where('id', $id)->delete();
+        if ($deleted) {
+            return response()->json(['success' => true, 'message' => 'Contact rejected successfully']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Failed to reject contact'], 400);
+        }
     }
 }

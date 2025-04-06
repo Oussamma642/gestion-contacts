@@ -1,4 +1,28 @@
 <script>
+function rejectContact(shareId) {
+    fetch(`/shared-contacts/${shareId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Remove the rejected contact from the modal
+                const row = document.querySelector(`tr[data-share-id="${shareId}"]`);
+                if (row) {
+                    row.remove();
+                }
+            } else {
+                console.error('Failed to reject contact');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
 function openSharedContactsModal() {
     const modal = document.getElementById('sharedContactsModal');
     modal.classList.remove('hidden');
@@ -12,16 +36,12 @@ function openSharedContactsModal() {
             // Populate the table with shared contacts
             sharedContacts.forEach(contact => {
                 tableBody.innerHTML += `
-                    <tr>
+                    <tr data-share-id="${contact.share_id}">
                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${contact.name}</td>
                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${contact.sender_name} Contact Id: ${contact.id} Shared-Contact Id: ${contact.share_id}</td>
                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
                             <button type='button' class="bg-blue-500 text-white px-2 py-1 rounded">Accept</button>
-                            <form action='/shared-contacts/${contact.share_id}' method="post" class="inline">
-                                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded">Reject</button>
-                            </form>
+                            <button type="button" onclick="rejectContact(${contact.share_id})" class="bg-red-500 text-white px-2 py-1 rounded">Reject</button>
                         </td>
                     </tr>
                 `;
