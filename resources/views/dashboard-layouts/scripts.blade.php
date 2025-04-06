@@ -256,8 +256,15 @@ function openEditModal(contactId) {
 }
 
 function closeModal(modelType) {
+
+    if (modelType === "acceptSharedContactModal") {
+        document.getElementById(modelType).classList.add('hidden');
+        openSharedContactsModal()
+    }
     document.getElementById(modelType).classList.add('hidden');
+
 }
+
 
 function deleteContact(contactId) {
     if (confirm('Êtes-vous sûr de vouloir supprimer ce contact ?')) {

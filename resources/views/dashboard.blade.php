@@ -186,7 +186,8 @@
 </div>
 
 <!-- Modal for the shared contacts -->
-<div id="sharedContactsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
+<div id="sharedContactsModal"
+    class="fixed inset-0 bg-gray-600  bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
     @include('modals.sharedContacts')
 </div>
 
