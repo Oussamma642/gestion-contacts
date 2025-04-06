@@ -29,4 +29,16 @@ class Contact extends Model
             ->withTimestamps();
     }
 
+    public function sharedBy()
+    {
+        return $this->belongsToMany(User::class, 'share_contacts', 'contact_id', 'sender_id')
+            ->withPivot('receiver_id', 'status', 'created_at', 'updated_at');
+    }
+
+    public function sharedWith()
+    {
+        return $this->belongsToMany(User::class, 'share_contacts', 'contact_id', 'receiver_id')
+            ->withPivot('sender_id', 'status', 'created_at', 'updated_at');
+    }
+
 }

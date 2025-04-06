@@ -51,103 +51,148 @@
             </div>
         </div> <!-- Liste des contacts -->
         <div class="bg-white rounded-lg shadow">
+
             <div class="p-4 sm:p-6 border-b border-gray-200">
                 <div
                     class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-3 sm:space-y-0">
                     <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Vos contacts récents</h2>
+                    <button onclick="openUsersModal()"
+                        class="w-full sm:w-auto bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        <i class="fas fa-share-alt mr-2"></i>Partager
+                    </button>
                     <a href="{{ route('export.contacts') }}"
                         class="w-full sm:w-auto bg-green-800 text-white px-4 py-2 rounded-lg hover:bg-green-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                         <i class="fas fa-file-excel mr-2"></i>Export to Excel
                     </a>
+
                     <button onclick="openAddModal()"
                         class="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                         <i class="fas fa-plus mr-2"></i>Nouveau contact
                     </button>
                 </div>
-
             </div>
 
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th
-                                class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Nom</th>
-                            <th
-                                class="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Email</th>
-                            <th
-                                class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Téléphone</th>
-                            <th
-                                class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Catégorie</th>
-                            <th
-                                class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse($contacts as $contact)
-                        <tr>
-                            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10">
-                                        <div
-                                            class="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                                            <i class="fas fa-user text-gray-500 text-sm sm:text-base"></i>
+            <form method="POST" action="{{ route('share.contacts') }}">
+                @csrf
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th
+                                    class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)">
+                                </th>
+                                <th
+                                    class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Nom
+                                </th>
+                                <th
+                                    class="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Email
+                                </th>
+                                <th
+                                    class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Téléphone
+                                </th>
+                                <th
+                                    class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Catégorie
+                                </th>
+                                <th
+                                    class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            @forelse($contacts as $contact)
+                            <tr>
+                                <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
+                                    <input type="checkbox" name="contact_ids[]" value="{{ $contact->id }}">
+                                </td>
+                                <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10">
+                                            <div
+                                                class="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                                <i class="fas fa-user text-gray-500 text-sm sm:text-base"></i>
+                                            </div>
+                                        </div>
+                                        <div class="ml-3 sm:ml-4">
+                                            <div class="text-sm font-medium text-gray-900">{{ $contact->name }}</div>
+                                            <div class="sm:hidden text-xs text-gray-500">{{ $contact->email }}</div>
                                         </div>
                                     </div>
-                                    <div class="ml-3 sm:ml-4">
-                                        <div class="text-sm font-medium text-gray-900">{{ $contact->name }}</div>
-                                        <div class="sm:hidden text-xs text-gray-500">{{ $contact->email }}</div>
-                                    </div>
+                                </td>
+                                <td class="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ $contact->email }}</div>
+                                </td>
+                                <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ $contact->phone }}</div>
+                                </td>
+                                <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                        @if($contact->category == 'ami') bg-blue-100 text-blue-800
+                                        @elseif($contact->category == 'famille') bg-green-100 text-green-800
+                                        @elseif($contact->category == 'professionnel') bg-purple-100 text-purple-800
+                                        @else bg-yellow-100 text-yellow-800
+                                        @endif">
+                                        {{ ucfirst($contact->category) }}
+                                    </span>
+                                </td>
+                                <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <button onclick="openEditModal({{ $contact->id }})"
+                                        class="text-blue-600 hover:text-blue-900 mr-3" title="Modifier">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <a href="{{ route('persons.RelatedPersons', $contact->id) }}"
+                                        class="text-purple-600 hover:text-purple-900 mr-3" title="Personnes liées">
+                                        <i class="fas fa-people-arrows"></i>
+                                    </a>
+                                    <button onclick="deleteContact({{ $contact->id }})"
+                                        class="text-red-600 hover:text-red-900" title="Supprimer">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                    Aucun contact trouvé
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                    <div id="usersModal"
+                        class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
+                        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                            <div class="mt-3">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4" id="modalTitle">Select Users</h3>
+                                <!-- Users Dropdown -->
+                                <label for="receiver_id" class="block text-sm font-medium text-gray-700">Users</label>
+                                <select name="receiver_id" id="userDropdown"
+                                    class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                    <!-- Users will be dynamically inserted here -->
+                                </select>
+                                <!-- Modal Actions -->
+                                <div class="flex justify-end mt-4">
+                                    <button type="button" onclick="closeModal('usersModal')"
+                                        class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                                        Annuler
+                                    </button>
+                                    <button type="submit"
+                                        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                        Envoyer
+                                    </button>
                                 </div>
-                            </td>
-                            <td class="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ $contact->email }}</div>
-                            </td>
-                            <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ $contact->phone }}</div>
-                            </td>
-                            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                    @if($contact->category == 'ami') bg-blue-100 text-blue-800
-                                    @elseif($contact->category == 'famille') bg-green-100 text-green-800
-                                    @elseif($contact->category == 'professionnel') bg-purple-100 text-purple-800
-                                    @else bg-yellow-100 text-yellow-800
-                                    @endif">
-                                    {{ ucfirst($contact->category) }}
-                                </span>
-                            </td>
-                            <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <button onclick="openEditModal({{ $contact->id }})"
-                                    class="text-blue-600 hover:text-blue-900 mr-3" title="Modifier">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <!-- Related contacts -->
-                                <a href="{{ route('persons.RelatedPersons', $contact->id) }}"
-                                    class="text-purple-600 hover:text-purple-900 mr-3" title="Personnes liées">
-                                    <i class="fas fa-people-arrows"></i>
-                                </a>
+                            </div>
+                        </div>
+                    </div>
 
-                                <button onclick="deleteContact({{ $contact->id }})"
-                                    class="text-red-600 hover:text-red-900" title="Supprimer">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">
-                                Aucun contact trouvé
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                </div>
+            </form>
+
         </div>
     </div>
 </main>
@@ -192,8 +237,15 @@
                         <option value="collegue">Collègue</option>
                     </select>
                 </div>
+                <div class="mb-4 flex items-center space-x-2">
+                    <button
+                        class="flex items-center bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        <i class="fas fa-plus mr-2"></i>
+                        Related Contacts
+                    </button>
+                </div>
                 <div class="flex justify-end">
-                    <button type="button" onclick="closeModal()"
+                    <button type="button" onclick="closeModal('contactModal')"
                         class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                         Annuler
                     </button>
@@ -207,7 +259,77 @@
     </div>
 </div>
 
+
+
 <script>
+function openUsersModal() {
+    // Show the modal
+    document.getElementById('usersModal').classList.remove('hidden');
+
+    // Fetch the users
+    fetch('/users')
+        .then(response => response.json())
+        .then(users => {
+            const userDropdown = document.getElementById('userDropdown');
+            userDropdown.innerHTML = ''; // Clear any existing options
+
+            // Populate the dropdown with user data
+            users.forEach(user => {
+                userDropdown.innerHTML += `
+                    <option value="${user.id}">(${user.email})</option>
+                `;
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching users:', error);
+        });
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+}
+
+function toggleSelectAllUsers(source) {
+    const checkboxes = document.querySelectorAll('input[name="user_ids[]"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = source.checked;
+    });
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+}
+
+function toggleSelectAll(source) {
+    const checkboxes = document.querySelectorAll('input[name="contact_ids[]"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = source.checked;
+    });
+}
+
+// Add this function and event listeners
+function setupCheckboxListeners() {
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const individualCheckboxes = document.querySelectorAll('input[name="contact_ids[]"]');
+
+    // Add event listeners to each individual checkbox
+    individualCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            // If any checkbox is unchecked, uncheck the "select all" checkbox
+            if (!checkbox.checked) {
+                selectAllCheckbox.checked = false;
+            }
+            // If all checkboxes are checked, check the "select all" checkbox
+            else if (Array.from(individualCheckboxes).every(cb => cb.checked)) {
+                selectAllCheckbox.checked = true;
+            }
+        });
+    });
+}
+
+// Call this when the page loads
+document.addEventListener('DOMContentLoaded', setupCheckboxListeners);
+
 function openAddModal() {
     document.getElementById('modalTitle').textContent = 'Nouveau contact';
     document.getElementById('contactForm').reset();
@@ -244,8 +366,8 @@ function openEditModal(contactId) {
         });
 }
 
-function closeModal() {
-    document.getElementById('contactModal').classList.add('hidden');
+function closeModal(modelType) {
+    document.getElementById(modelType).classList.add('hidden');
 }
 
 function deleteContact(contactId) {

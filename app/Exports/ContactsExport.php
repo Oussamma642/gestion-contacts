@@ -11,7 +11,9 @@ class ContactsExport implements FromCollection, WithHeadings
     public function collection()
     {
         // Fetch the required columns for the export
-        return Contact::select('name', 'email', 'phone', 'category')->get();
+        // return Contact::select('name', 'email', 'phone', 'category')->get();
+        return Contact::where('user_id', auth()->id())->select('name', 'email', 'phone', 'category')->get();    
+
     }
 
     public function headings(): array

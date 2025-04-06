@@ -1,14 +1,12 @@
 <?php
-
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Contact;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-
-use App\Models\Contact;
 
 class User extends Authenticatable
 {
@@ -42,11 +40,23 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        'password'          => 'hashed',
     ];
 
     public function contacts()
     {
         return $this->hasMany(Contact::class);
+    }
+
+    public function sharedContacts()
+    {
+        return $this->belongsToMany(Contact::class, 'share_contacts', 'sender_id', 'contact_id')
+            ->withPivot('receiver_id', 'status', 'created_at', 'updated_at');
+    }
+
+    public function receivedContacts()
+    {
+        return $this->belongsToMany(Contact::class, 'share_contacts', 'receiver_id', 'contact_id')
+            ->withPivot('sender_id', 'status', 'created_at', 'updated_at');
     }
 }
