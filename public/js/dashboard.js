@@ -1,3 +1,66 @@
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('-translate-x-full');
+}
+
+
+function openSharedContactsModal() {
+    const modal = document.getElementById('sharedContactsModal');
+    modal.classList.remove('hidden');
+
+    fetch('/shared-contacts') // Make sure this API route exists
+        .then(response => response.json())
+        .then(sharedContacts => {
+            const tableBody = document.getElementById('sharedContactsTable');
+            tableBody.innerHTML = ''; // Clear previous data
+
+            // Populate the table with shared contacts
+            sharedContacts.forEach(contact => {
+                tableBody.innerHTML += `
+                    <tr>
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${contact.name}</td>
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${contact.sender_name} ${contact.id}</td>
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
+                            <button class="bg-blue-500 text-white px-2 py-1 rounded">Accept</button>
+                            <button class="bg-red-500 text-white px-2 py-1 rounded">Reject</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching shared contacts:', error);
+        });
+}
+
+// Count Pending Shared Contacts
+function fetchSharedContactsCount() {
+    fetch('/shared-contacts') // API to get pending shared contacts
+        .then(response => response.json())
+        .then(sharedContacts => {
+            const pendingCount = sharedContacts.length; // Count the pending contacts
+            const countBadge = document.getElementById('sharedContactsCount');
+            countBadge.textContent = pendingCount;
+
+            // Hide the badge if there are no pending contacts
+            if (pendingCount === 0) {
+                countBadge.classList.add('hidden');
+            } else {
+                countBadge.classList.remove('hidden');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching shared contacts count:', error);
+        });
+}
+
+// Call the function when the page loads
+document.addEventListener('DOMContentLoaded', fetchSharedContactsCount);
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+}
+
 function openUsersModal() {
     // Show the modal only if at least one contact is selected
     const selectedContacts = document.querySelectorAll('input[name="contact_ids[]"]:checked');
