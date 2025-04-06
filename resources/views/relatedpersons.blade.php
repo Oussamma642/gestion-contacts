@@ -5,7 +5,11 @@
     <div class="overflow-x-auto">
 
         <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">
-            Related Contacts of {{$contacts[0]->name}}
+            @if($contacts->isNotEmpty())
+            Related Contacts of {{ $contacts[0]->name }}
+            @else
+            No related contacts found
+            @endif
         </h1>
 
         <table class="min-w-full table-auto divide-y divide-gray-200 border border-gray-300">
