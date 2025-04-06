@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function acceptContact(contactId) {
     // Define the target form and action
+    document.getElementById('acceptSharedContactModal').classList.remove('hidden');
+    document.getElementById('sharedContactsModal').classList.add('hidden');
+
     const form = document.getElementById('acceptForm');
     form.action = `/accept-shared-contact/${contactId}`;
 
@@ -27,7 +30,7 @@ function acceptContact(contactId) {
     methodInput.value = 'POST';
 
     // Fetch the contact details
-    fetch(`/shared-contact-details/${contactId}`)
+    fetch(`/contacts/${contactId}`)
         .then(response => response.json())
         .then(data => {
             document.getElementById('name').value = data.name;

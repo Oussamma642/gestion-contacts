@@ -190,4 +190,9 @@
     @include('modals.sharedContacts')
 </div>
 
+<div class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50"
+    id="acceptSharedContactModal">
+    @include('modals.acceptSharedContact')
+</div>
+
 @endsection

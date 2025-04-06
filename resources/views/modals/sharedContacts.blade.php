@@ -21,8 +21,12 @@
                 <tbody id="sharedContactsTable" class="bg-white divide-y divide-gray-200">
                     <!-- Shared Contacts will be dynamically inserted here -->
                 </tbody>
+
             </table>
         </div>
+
+
+
         <div class="flex justify-end mt-1">
             <button type="button" onclick="closeModal('sharedContactsModal')"
                 class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
@@ -30,7 +34,4 @@
             </button>
         </div>
 
-        <div id="acceptSharedContactModal">
-            @include('modals.acceptSharedContact')
-        </div>
     </div>

@@ -1,8 +1,8 @@
-<div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white" id="acceptSharedContactModal">
+<div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
     <div class="mt-3">
-        <h3 class="text-lg font-medium text-gray-900 mb-4" id="modalTitle">Accept Shared Contact</h3>
         <form id="acceptForm" method="POST" action="#">
             @csrf
+            @method('post')
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Nom complet</label>
                 <input type="text" name="name" id="name" required
@@ -40,4 +40,3 @@
             </div>
         </form>
     </div>
-</div>
