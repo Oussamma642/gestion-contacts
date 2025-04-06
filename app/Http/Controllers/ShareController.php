@@ -6,60 +6,6 @@ use Illuminate\Http\Request;
 class ShareController extends Controller
 {
 
-    /*
-    public function share(Request $request)
-    {
-        $senderId   = auth()->id();                   // Current authenticated user
-        $receiverId = $request->input('receiver_id'); // User receiving the contact
-        $contactIds = $request->input('contact_ids'); // Array of contact IDs being shared
-
-        foreach ($contactIds as $contactId) {
-            \DB::table('share_contacts')->updateOrInsert(
-                [
-                    'sender_id'   => $senderId,
-                    'receiver_id' => $receiverId,
-                    'contact_id'  => $contactId,
-                ],
-                ['status' => 'pending', 'created_at' => now(), 'updated_at' => now()]
-            );
-        }
-        return redirect()->back()->with('success', 'Contacts shared successfully!');
-    }
-    */
-
-/*
-
-    public function share(Request $request)
-{
-    $senderId = auth()->id(); // Authenticated user (sender)
-    $receiverId = $request->input('receiver_id'); // Receiving user
-    $contactIds = $request->input('contact_ids'); // Array of contact IDs being shared
-
-    foreach ($contactIds as $contactId) {
-        // Check if the shared contact already exists
-        $exists = \DB::table('share_contacts')->where([
-            ['sender_id', '=', $senderId],
-            ['receiver_id', '=', $receiverId],
-            ['contact_id', '=', $contactId],
-        ])->exists();
-
-        if (!$exists) {
-            // If it doesn't exist, insert into the database
-            \DB::table('share_contacts')->insert([
-                'sender_id' => $senderId,
-                'receiver_id' => $receiverId,
-                'contact_id' => $contactId,
-                'status' => 'pending',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-    }
-
-    return redirect()->back()->with('success', 'Contacts shared successfully!');
-}
-*/
-
     private function checkIfContactExistsInRecieverUser($contact, $receiverId, $senderId): bool
     {
         // Return true if the contact already belongs to the receiver

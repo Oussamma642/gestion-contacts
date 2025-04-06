@@ -1,4 +1,5 @@
 <script>
+// Animation for displaying errors if a contact alreadt exits in the reciever
 document.addEventListener('DOMContentLoaded', function() {
     const notification = document.getElementById('error-notification');
     if (notification) {
