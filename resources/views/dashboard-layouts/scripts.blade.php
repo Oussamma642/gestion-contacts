@@ -11,6 +11,36 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+function acceptContact(contactId) {
+    // Define the target form and action
+    const form = document.getElementById('acceptForm');
+    form.action = `/accept-shared-contact/${contactId}`;
+
+    // Spoof the method if needed
+    let methodInput = form.querySelector('input[name="_method"]');
+    if (!methodInput) {
+        methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        form.appendChild(methodInput);
+    }
+    methodInput.value = 'POST';
+
+    // Fetch the contact details
+    fetch(`/shared-contact-details/${contactId}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('name').value = data.name;
+            document.getElementById('email').value = data.email;
+            document.getElementById('phone').value = data.phone;
+            document.getElementById('category').value = data.category;
+            document.getElementById('acceptSharedContactModal').classList.remove('hidden');
+        })
+        .catch(error => {
+            console.error('Error fetching contact details:', error);
+        });
+}
+
 function rejectContact(shareId) {
     fetch(`/shared-contacts/${shareId}`, {
             method: 'DELETE',
@@ -57,7 +87,7 @@ function openSharedContactsModal() {
         .then(sharedContacts => {
             const tableBody = document.getElementById('sharedContactsTable');
             tableBody.innerHTML = ''; // Clear previous data
-
+            // contacts.id
             // Populate the table with shared contacts
             sharedContacts.forEach(contact => {
                 tableBody.innerHTML += `
@@ -65,7 +95,7 @@ function openSharedContactsModal() {
                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${contact.name}</td>
                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${contact.sender_name} Contact Id: ${contact.id} Shared-Contact Id: ${contact.share_id}</td>
                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
-                            <button type='button' class="bg-blue-500 text-white px-2 py-1 rounded">Accept</button>
+                            <button type="button" onclick="acceptContact(${contact.id})" class="bg-blue-500 text-white px-2 py-1 rounded">Accept</button>
                             <button type="button" onclick="rejectContact(${contact.share_id})" class="bg-red-500 text-white px-2 py-1 rounded">Reject</button>
                         </td>
                     </tr>

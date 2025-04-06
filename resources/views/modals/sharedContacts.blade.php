@@ -29,4 +29,8 @@
                 Close
             </button>
         </div>
+
+        <div id="acceptSharedContactModal">
+            @include('modals.acceptSharedContact')
+        </div>
     </div>

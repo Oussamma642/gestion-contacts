@@ -88,4 +88,30 @@ class ShareController extends Controller
             return response()->json(['success' => false, 'message' => 'Failed to reject contact'], 400);
         }
     }
+    public function accept(Request $request, $id)
+    {
+        // Fetch the shared contact details
+        $sharedContact = \DB::table('share_contacts')->where('id', $id)->first();
+    
+        if (!$sharedContact) {
+            return redirect()->back()->with('error', 'Shared contact not found');
+
+        }
+    
+        // Add the contact to the authenticated user's contacts
+        \DB::table('contacts')->insert([
+            'user_id' => auth()->id(),
+            'name' => $sharedContact->name,
+            'email' => $sharedContact->email,
+            'phone' => $sharedContact->phone,
+            'category' => $sharedContact->category,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    
+        // Update the shared contact status to 'accepted'
+        \DB::table('share_contacts')->where('id', $id)->update(['status' => 'accepted']);
+    
+        return response()->json(['success' => true, 'message' => 'Contact accepted successfully.']);
+    }
 }

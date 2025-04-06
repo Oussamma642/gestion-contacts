@@ -47,7 +47,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/shared-contacts/{id}', [ShareController::class, 'reject']);
 
     // Route for accepting a shared-contact
-
+    Route::post('/accept-shared-contact/{id}', [ShareController::class, 'accept']);
 });
 
 // Routes d'authentification
