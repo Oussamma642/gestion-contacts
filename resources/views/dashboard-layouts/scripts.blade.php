@@ -89,7 +89,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function acceptContact(contactId) {
-    document.getElementById('acceptSharedContactModal').classList.remove('hidden');
 
     const form = document.getElementById('acceptForm');
     form.action = `/accept-shared-contact/${contactId}`;
@@ -112,10 +111,12 @@ function acceptContact(contactId) {
         })
         .then(data => {
             console.log(data); // Check this in the console to confirm data structure
-            document.getElementById('name').value = data.name || '';
-            document.getElementById('email').value = data.email || '';
-            document.getElementById('phone').value = data.phone || '';
-            document.getElementById('category').value = data.category || 'ami';
+            document.getElementById('sharedName').value = data.name || '';
+            document.getElementById('sharedEmail').value = data.email || '';
+            document.getElementById('sharedPhone').value = data.phone || '';
+            document.getElementById('ShareCategory').value = data.category || 'ami';
+            document.getElementById('acceptSharedContactModal').classList.remove('hidden');
+
         })
         .catch(error => {
             console.error('Error fetching contact details:', error);
