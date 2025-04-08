@@ -12,45 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-/*
-function acceptContact(contactId, shareId) {
-
-    const form = document.getElementById('acceptForm');
-    form.action = `/accept-shared-contact`;
-
-    let methodInput = form.querySelector('input[name="_method"]');
-    if (!methodInput) {
-        methodInput = document.createElement('input');
-        methodInput.type = 'hidden';
-        methodInput.name = '_method';
-        form.appendChild(methodInput);
-    }
-    methodInput.value = 'POST';
-
-    fetch(`/contacts/${contactId}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to fetch contact details.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data); // Check this in the console to confirm data structure
-            document.getElementById('sharedId').value = shareId || '';
-            document.getElementById('sharedName').value = data.name || '';
-            document.getElementById('sharedEmail').value = data.email || '';
-            document.getElementById('sharedPhone').value = data.phone || '';
-            document.getElementById('ShareCategory').value = data.category || 'ami';
-            document.getElementById('acceptSharedContactModal').classList.remove('hidden');
-
-        })
-        .catch(error => {
-            console.error('Error fetching contact details:', error);
-        });
-}
-*/
-
-
 function decrementPendingSharedContacts(shareId) {
     const row = document.querySelector(`tr[data-share-id="${shareId}"]`);
     if (row) {
@@ -86,7 +47,7 @@ function acceptContact(contactId, shareId) {
             document.getElementById('sharedPhone').value = data.phone || '';
 
             document.getElementById('sharedEmail').readOnly = true;
-            document.getElementById('sharedPhone').rreadOnly = true;
+            document.getElementById('sharedPhone').readOnly = true;
 
 
             document.getElementById('ShareCategory').value = data.category || 'ami';
@@ -219,9 +180,7 @@ function fetchSharedContactsCount() {
 // Call the function when the page loads
 document.addEventListener('DOMContentLoaded', fetchSharedContactsCount);
 
-function closeModal(modalId) {
-    document.getElementById(modalId).classList.add('hidden');
-}
+
 
 function openUsersModal() {
     // Show the modal only if at least one contact is selected
@@ -258,9 +217,6 @@ function openUsersModal() {
         });
 }
 
-function closeModal(modalId) {
-    document.getElementById(modalId).classList.add('hidden');
-}
 
 function toggleSelectAllUsers(source) {
     const checkboxes = document.querySelectorAll('input[name="user_ids[]"]');
@@ -269,9 +225,7 @@ function toggleSelectAllUsers(source) {
     });
 }
 
-function closeModal(modalId) {
-    document.getElementById(modalId).classList.add('hidden');
-}
+
 
 function toggleSelectAll(source) {
     const checkboxes = document.querySelectorAll('input[name="contact_ids[]"]');
@@ -340,13 +294,21 @@ function openEditModal(contactId) {
 }
 
 function closeModal(modelType) {
-
-    if (modelType === "acceptSharedContactModal") {
-        document.getElementById(modelType).classList.add('hidden');
-        openSharedContactsModal();
+    switch (modelType) {
+        case 'acceptSharedContactModal': {
+            document.getElementById(modelType).classList.add('hidden');
+            openSharedContactsModal();
+            break;
+        }
+        case 'sharedContactsModal': {
+            location.reload(); // Refresh the page
+            break;
+        }
+        default: {
+            document.getElementById(modelType).classList.add('hidden');
+            break;
+        }
     }
-    document.getElementById(modelType).classList.add('hidden');
-
 }
 
 
