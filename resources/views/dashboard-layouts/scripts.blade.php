@@ -51,6 +51,21 @@ function acceptContact(contactId, shareId) {
 */
 
 
+function decrementPendingSharedContacts() {
+    const countBadge = document.getElementById('sharedContactsCount');
+    let pendingCount = parseInt(countBadge.textContent);
+    if (!isNaN(pendingCount) && pendingCount > 0) {
+        pendingCount -= 1;
+        countBadge.textContent = pendingCount;
+
+        // Hide the badge if count reaches zero
+        if (pendingCount === 0) {
+            countBadge.classList.add('hidden');
+        }
+    }
+
+}
+
 function acceptContact(contactId, shareId) {
     fetch(`/contacts/${contactId}`)
         .then(response => {
@@ -98,6 +113,8 @@ function acceptContact(contactId, shareId) {
                     .then(responseData => {
                         // Handle success (hide modal, show message, update UI, etc.)
                         document.getElementById('acceptSharedContactModal').classList.add('hidden');
+                        decrementPendingSharedContacts();
+
                         alert('Contact accepted successfully!');
                         // You could also refresh part of the contact list here if needed
                     })
@@ -132,17 +149,7 @@ function rejectContact(shareId) {
                 }
 
                 // Decrement the pending count
-                const countBadge = document.getElementById('sharedContactsCount');
-                let pendingCount = parseInt(countBadge.textContent);
-                if (!isNaN(pendingCount) && pendingCount > 0) {
-                    pendingCount -= 1;
-                    countBadge.textContent = pendingCount;
-
-                    // Hide the badge if count reaches zero
-                    if (pendingCount === 0) {
-                        countBadge.classList.add('hidden');
-                    }
-                }
+                decrementPendingSharedContacts()
             } else {
                 console.error('Failed to reject contact');
             }
