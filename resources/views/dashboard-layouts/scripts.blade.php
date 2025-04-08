@@ -100,8 +100,6 @@ function acceptContact(contactId, shareId) {
         });
 }
 
-
-
 function rejectContact(shareId) {
     fetch(`/shared-contacts/${shareId}`, {
             method: 'DELETE',
@@ -224,7 +222,6 @@ function toggleSelectAllUsers(source) {
         checkbox.checked = source.checked;
     });
 }
-
 
 
 function toggleSelectAll(source) {

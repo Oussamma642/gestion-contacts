@@ -1,37 +1,65 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Contact;
+use App\Models\ShareContact;
 use Illuminate\Http\Request;
 
 class ShareController extends Controller
 {
 
-    private function checkIfContactExistsInRecieverUser($contact, $receiverId, $senderId): bool
+    private function checkIfContactExistsInReceiverUser(Contact $contact, int $receiverId, int $senderId): bool
     {
-        // Return true if the contact already belongs to the receiver
+        // Case 1: Contact already belongs to the receiver (same user_id)
         if ($contact->user_id == $receiverId) {
             return true;
         }
 
-        // Check if the shared contact already exists
-        return \DB::table('share_contacts')->where([
+        // Case 2: A shared contact with same sender, receiver and contact already exists
+        $alreadyShared = ShareContact::where([
             ['sender_id', '=', $senderId],
             ['receiver_id', '=', $receiverId],
             ['contact_id', '=', $contact->id],
         ])->exists();
+
+        if ($alreadyShared) {
+            return true;
+        }
+
+        // Case 3: A contact with the same phone already exists in the receiver's contacts
+        $phoneExists = Contact::where('user_id', $receiverId)
+            ->where('phone', $contact->phone)
+            ->exists();
+
+        if ($phoneExists) {
+            return true;
+        }
+
+        // None of the conditions matched, so it's safe to share
+        return false;
     }
 
     public function share(Request $request)
     {
-        $insertData = [];
-        $errors     = [];
         $senderId   = auth()->id();
         $receiverId = $request->input('receiver_id');
         $contactIds = $request->input('contact_ids');
-        $contacts   = \DB::table('contacts')->whereIn('id', $contactIds)->get();
+
+        $errors     = [];
+        $insertData = [];
+
+        // Prevent sharing with self
+        if ($receiverId == $senderId) {
+            return redirect()->back()->with('error', 'You cannot share a contact with yourself.');
+        }
+
+        // Get contacts owned by the sender
+        $contacts = Contact::whereIn('id', $contactIds)
+            ->where('user_id', $senderId)
+            ->get();
 
         foreach ($contacts as $contact) {
-            if (! $this->checkIfContactExistsInRecieverUser($contact, $receiverId, $senderId)) {
+            if (! $this->checkIfContactExistsInReceiverUser($contact, $receiverId, $senderId)) {
                 $insertData[] = [
                     'sender_id'   => $senderId,
                     'receiver_id' => $receiverId,
@@ -41,12 +69,12 @@ class ShareController extends Controller
                     'updated_at'  => now(),
                 ];
             } else {
-                $errors[] = "Contact ID {$contact->name} already belongs to the receiver.";
+                $errors[] = "The contact '{$contact->name}' is already shared or owned by the receiver.";
             }
         }
 
         if (! empty($insertData)) {
-            \DB::table('share_contacts')->insert($insertData);
+            ShareContact::insert($insertData);
         }
 
         if (! empty($errors)) {
@@ -54,16 +82,6 @@ class ShareController extends Controller
         }
 
         return redirect()->back()->with('success', 'Contacts shared successfully!');
-    }
-
-    public function updateStatus(Request $request)
-    {
-        $shareId   = $request->input('share_id'); // Share record ID
-        $newStatus = $request->input('status');   // New status (accepted, rejected)
-
-        \DB::table('share_contacts')->where('id', $shareId)->update(['status' => $newStatus]);
-
-        return redirect()->back()->with('success', 'Status updated successfully!');
     }
 
     public function getPendingSharedContacts()
@@ -92,32 +110,17 @@ class ShareController extends Controller
 
     }
 
-    /*
-    public function accept(Request $request)
-    {
-        $deleted = \DB::table('share_contacts')->where('id', $request->input('sharedId'))->delete();
-
-        \DB::table('contacts')->insert([
-            'user_id' => auth()->id(),
-            'name' => $request->input('sharedName'),
-            'email' => $request->input('sharedEmail'),
-            'phone' => $request->input('sharedPhone'),
-            'category' => $request->input('ShareCategory'),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        return redirect()->route('dashboard');
-    }
-    */
-
     public function accept(Request $request)
     {
         $data = $request->all();
 
-        \DB::table('share_contacts')->where('id', $data['sharedId'])->delete();
+        $deleted = \DB::table('share_contacts')->where('id', $data['sharedId'])->delete();
 
-        \DB::table('contacts')->insert([
+        if (! $deleted) {
+            return response()->json(['success' => false, 'message' => 'Failed to reject contact'], 400);
+        }
+
+        $inserted = \DB::table('contacts')->insert([
             'user_id'    => auth()->id(),
             'name'       => $data['sharedName'],
             'email'      => $data['sharedEmail'],
@@ -127,6 +130,7 @@ class ShareController extends Controller
             'updated_at' => now(),
         ]);
 
+        if (! $inserted) {return response()->json(['success' => false, 'message' => 'Failed to insert the  contact'], 400);}
         return response()->json(['message' => 'Contact accepted successfully']);
     }
 
