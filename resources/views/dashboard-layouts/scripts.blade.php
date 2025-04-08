@@ -51,7 +51,11 @@ function acceptContact(contactId, shareId) {
 */
 
 
-function decrementPendingSharedContacts() {
+function decrementPendingSharedContacts(shareId) {
+    const row = document.querySelector(`tr[data-share-id="${shareId}"]`);
+    if (row) {
+        row.remove();
+    }
     const countBadge = document.getElementById('sharedContactsCount');
     let pendingCount = parseInt(countBadge.textContent);
     if (!isNaN(pendingCount) && pendingCount > 0) {
@@ -80,6 +84,11 @@ function acceptContact(contactId, shareId) {
             document.getElementById('sharedName').value = data.name || '';
             document.getElementById('sharedEmail').value = data.email || '';
             document.getElementById('sharedPhone').value = data.phone || '';
+
+            document.getElementById('sharedEmail').readOnly = true;
+            document.getElementById('sharedPhone').rreadOnly = true;
+
+
             document.getElementById('ShareCategory').value = data.category || 'ami';
 
             // Show the modal (assuming you still want this)
@@ -113,7 +122,7 @@ function acceptContact(contactId, shareId) {
                     .then(responseData => {
                         // Handle success (hide modal, show message, update UI, etc.)
                         document.getElementById('acceptSharedContactModal').classList.add('hidden');
-                        decrementPendingSharedContacts();
+                        decrementPendingSharedContacts(shareId);
 
                         alert('Contact accepted successfully!');
                         // You could also refresh part of the contact list here if needed
@@ -143,13 +152,10 @@ function rejectContact(shareId) {
         .then(response => {
             if (response.ok) {
                 // Remove the rejected contact from the modal
-                const row = document.querySelector(`tr[data-share-id="${shareId}"]`);
-                if (row) {
-                    row.remove();
-                }
+
 
                 // Decrement the pending count
-                decrementPendingSharedContacts()
+                decrementPendingSharedContacts(shareId)
             } else {
                 console.error('Failed to reject contact');
             }
