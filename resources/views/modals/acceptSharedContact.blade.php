@@ -49,7 +49,7 @@
                     class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                     Annuler
                 </button>
-                <button type="submit"
+                <button id="acceptSubmitBtn" type="button"
                     class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     Enregistrer
                 </button>

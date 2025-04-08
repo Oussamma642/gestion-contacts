@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+/*
 function acceptContact(contactId, shareId) {
 
     const form = document.getElementById('acceptForm');
@@ -47,6 +48,72 @@ function acceptContact(contactId, shareId) {
             console.error('Error fetching contact details:', error);
         });
 }
+*/
+
+
+function acceptContact(contactId, shareId) {
+    fetch(`/contacts/${contactId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch contact details.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Fill the modal with data
+            document.getElementById('sharedId').value = shareId || '';
+            document.getElementById('sharedName').value = data.name || '';
+            document.getElementById('sharedEmail').value = data.email || '';
+            document.getElementById('sharedPhone').value = data.phone || '';
+            document.getElementById('ShareCategory').value = data.category || 'ami';
+
+            // Show the modal (assuming you still want this)
+            document.getElementById('acceptSharedContactModal').classList.remove('hidden');
+
+            // Submit the form via fetch when the user confirms
+            document.getElementById('acceptSubmitBtn').onclick = function() {
+                const payload = {
+                    sharedId: document.getElementById('sharedId').value,
+                    sharedName: document.getElementById('sharedName').value,
+                    sharedEmail: document.getElementById('sharedEmail').value,
+                    sharedPhone: document.getElementById('sharedPhone').value,
+                    ShareCategory: document.getElementById('ShareCategory').value
+                };
+
+                fetch('/accept-shared-contact', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                'content')
+                        },
+                        body: JSON.stringify(payload)
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to accept contact.');
+                        }
+                        return response.text(); // or .json() if your controller returns JSON
+                    })
+                    .then(responseData => {
+                        // Handle success (hide modal, show message, update UI, etc.)
+                        document.getElementById('acceptSharedContactModal').classList.add('hidden');
+                        alert('Contact accepted successfully!');
+                        // You could also refresh part of the contact list here if needed
+                    })
+                    .catch(error => {
+                        console.error('Error accepting contact:', error);
+                        alert('Something went wrong while accepting the contact.');
+                    });
+            };
+
+        })
+        .catch(error => {
+            console.error('Error fetching contact details:', error);
+        });
+}
+
+
 
 function rejectContact(shareId) {
     fetch(`/shared-contacts/${shareId}`, {

@@ -82,13 +82,17 @@ class ShareController extends Controller
     public function reject(string $id)
     {
         $deleted = \DB::table('share_contacts')->where('id', $id)->delete();
-        if ($deleted)
         if ($deleted) {
-            return response()->json(['success' => true, 'message' => 'Contact rejected successfully']);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Failed to reject contact'], 400);
+            if ($deleted) {
+                return response()->json(['success' => true, 'message' => 'Contact rejected successfully']);
+            } else {
+                return response()->json(['success' => false, 'message' => 'Failed to reject contact'], 400);
+            }
         }
+
     }
+
+    /*
     public function accept(Request $request)
     {
         $deleted = \DB::table('share_contacts')->where('id', $request->input('sharedId'))->delete();
@@ -102,7 +106,28 @@ class ShareController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-        
+
         return redirect()->route('dashboard');
     }
+    */
+
+    public function accept(Request $request)
+    {
+        $data = $request->all();
+
+        \DB::table('share_contacts')->where('id', $data['sharedId'])->delete();
+
+        \DB::table('contacts')->insert([
+            'user_id'    => auth()->id(),
+            'name'       => $data['sharedName'],
+            'email'      => $data['sharedEmail'],
+            'phone'      => $data['sharedPhone'],
+            'category'   => $data['ShareCategory'],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return response()->json(['message' => 'Contact accepted successfully']);
+    }
+
 }
