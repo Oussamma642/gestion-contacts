@@ -11,87 +11,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// function acceptContact(contactId) {
-//     // Define the target form and action
-//     // document.getElementById('acceptSharedContactModal').classList.remove('hidden');
-//     document.getElementById('sharedContactsModal').classList.add('hidden');
 
-//     const form = document.getElementById('acceptForm');
-//     form.action = `/accept-shared-contact/${contactId}`;
-
-//     // Spoof the method if needed
-//     let methodInput = form.querySelector('input[name="_method"]');
-//     if (!methodInput) {
-//         methodInput = document.createElement('input');
-//         methodInput.type = 'hidden';
-//         methodInput.name = '_method';
-//         form.appendChild(methodInput);
-//     }
-//     methodInput.value = 'POST';
-
-//     // Fetch the contact details
-//     fetch(`/contacts/${contactId}`)
-//         .then(response => {
-//             if (!response.ok) {
-//                 throw new Error('Failed to fetch contact details.');
-//             }
-//             return response.json();
-//         })
-//         .then(data => {
-//             console.log(data); // Check the output
-//             document.getElementById('name').value = data.name;
-//             document.getElementById('email').value = data.email;
-//             document.getElementById('phone').value = data.phone;
-//             document.getElementById('category').value = data.category;
-//             document.getElementById('acceptSharedContactModal').classList.remove('hidden');
-//         })
-//         .catch(error => {
-//             console.error('Error fetching contact details:', error);
-//         });
-
-// }
-
-// function acceptContact(contactId) {
-//     document.getElementById('acceptSharedContactModal').classList.remove('hidden');
-//     document.getElementById('sharedContactsModal').classList.add('hidden');
-
-//     const form = document.getElementById('acceptForm');
-//     form.action = `/accept-shared-contact/${contactId}`;
-
-//     // Spoof the method if needed
-//     let methodInput = form.querySelector('input[name="_method"]');
-//     if (!methodInput) {
-//         methodInput = document.createElement('input');
-//         methodInput.type = 'hidden';
-//         methodInput.name = '_method';
-//         form.appendChild(methodInput);
-//     }
-//     methodInput.value = 'POST';
-
-//     fetch(`/contacts/${contactId}`)
-//         .then(response => {
-//             if (!response.ok) {
-//                 throw new Error('Failed to fetch contact details.');
-//             }
-//             return response.json();
-//         })
-//         .then(data => {
-//             console.log(data);
-//             document.getElementById('name').value = data.name;
-//             document.getElementById('email').value = data.email;
-//             document.getElementById('phone').value = data.phone;
-//             document.getElementById('category').value = data.category;
-//         })
-//         .catch(error => {
-//             console.error('Error fetching contact details:', error);
-//         });
-// }
-
-
-function acceptContact(contactId) {
+function acceptContact(contactId, shareId) {
 
     const form = document.getElementById('acceptForm');
-    form.action = `/accept-shared-contact/${contactId}`;
+    form.action = `/accept-shared-contact`;
 
     let methodInput = form.querySelector('input[name="_method"]');
     if (!methodInput) {
@@ -111,6 +35,7 @@ function acceptContact(contactId) {
         })
         .then(data => {
             console.log(data); // Check this in the console to confirm data structure
+            document.getElementById('sharedId').value = shareId || '';
             document.getElementById('sharedName').value = data.name || '';
             document.getElementById('sharedEmail').value = data.email || '';
             document.getElementById('sharedPhone').value = data.phone || '';
@@ -177,7 +102,7 @@ function openSharedContactsModal() {
                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${contact.name}</td>
                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${contact.sender_name} Contact Id: ${contact.id} Shared-Contact Id: ${contact.share_id}</td>
                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
-                            <button type="button" onclick="acceptContact(${contact.id})" class="bg-blue-500 text-white px-2 py-1 rounded">Accept</button>
+                            <button type="button" onclick="acceptContact(${contact.id}, ${contact.share_id})" class="bg-blue-500 text-white px-2 py-1 rounded">Accept</button>
                             <button type="button" onclick="rejectContact(${contact.share_id})" class="bg-red-500 text-white px-2 py-1 rounded">Reject</button>
                         </td>
                     </tr>

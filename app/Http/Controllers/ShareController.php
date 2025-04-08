@@ -82,36 +82,27 @@ class ShareController extends Controller
     public function reject(string $id)
     {
         $deleted = \DB::table('share_contacts')->where('id', $id)->delete();
+        if ($deleted)
         if ($deleted) {
             return response()->json(['success' => true, 'message' => 'Contact rejected successfully']);
         } else {
             return response()->json(['success' => false, 'message' => 'Failed to reject contact'], 400);
         }
     }
-    public function accept(Request $request, $id)
+    public function accept(Request $request)
     {
-        // Fetch the shared contact details
-        $sharedContact = \DB::table('share_contacts')->where('id', $id)->first();
-    
-        if (!$sharedContact) {
-            return redirect()->back()->with('error', 'Shared contact not found');
+        $deleted = \DB::table('share_contacts')->where('id', $request->input('sharedId'))->delete();
 
-        }
-    
-        // Add the contact to the authenticated user's contacts
         \DB::table('contacts')->insert([
             'user_id' => auth()->id(),
-            'name' => $sharedContact->name,
-            'email' => $sharedContact->email,
-            'phone' => $sharedContact->phone,
-            'category' => $sharedContact->category,
+            'name' => $request->input('sharedName'),
+            'email' => $request->input('sharedEmail'),
+            'phone' => $request->input('sharedPhone'),
+            'category' => $request->input('ShareCategory'),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-    
-        // Update the shared contact status to 'accepted'
-        \DB::table('share_contacts')->where('id', $id)->update(['status' => 'accepted']);
-    
-        return response()->json(['success' => true, 'message' => 'Contact accepted successfully.']);
+        
+        return redirect()->route('dashboard');
     }
 }

@@ -3,6 +3,7 @@
         <h3 class="text-lg font-medium text-gray-900 mb-4" id="modalTitle">Nouveau contact</h3>
         <form id="acceptForm" method="POST" action="{{ route('contacts.store') }}">
             @csrf
+            <input type="hidden" id="sharedId" name="sharedId">
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
                     Nom complet
