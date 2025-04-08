@@ -17,11 +17,14 @@ class ContactController extends Controller
         $query = Contact::where('user_id', Auth::id());
 
         if ($request->has('category')) {
+            // If a category is specified, show all contacts from that category
             $query->where('category', $request->category);
+        } else {
+            // Otherwise, show all contacts created in the last 7 days
+            $query->where('created_at', '>=', now()->subDays(7));
         }
 
-        // $contacts = $query->latest()->get();
-        $contacts = $query->where('created_at', '>=', now()->subDays(7))->latest()->get();
+        $contacts = $query->latest()->get();
 
         $stats = [
             'ami'           => Contact::where('user_id', Auth::id())->where('category', 'ami')->count(),
@@ -70,54 +73,23 @@ class ContactController extends Controller
         return redirect()->route('dashboard')->with('success', 'Contact ajouté avec succès.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    // public function show(Contact $contact)
-    // {
-    //     if ($contact->user_id !== Auth::id()) {
-    //         abort(403);
-    //     }
-
-    //     return response()->json($contact);
-    // }
-
-    // public function show(Contact $contact)
-    // {
-    //     $authUserId = Auth::id();
-
-    //     // Check if the contact belongs to the user or is shared with them
-    //     $isShared = \DB::table('share_contacts')
-    //         ->where('contact_id', $contact->id)
-    //         ->where('receiver_id', $authUserId)
-    //         ->where('status', 'pending') // Ensure it's pending
-    //         ->exists();
-
-    //     if ($contact->user_id !== $authUserId && ! $isShared) {
-    //         abort(403, 'You do not have access to this contact.');
-    //     }
-
-    //     return response()->json($contact);
-    // }
-
     public function show(Contact $contact)
     {
         $authUserId = Auth::id();
-    
+
         // Check if the contact belongs to the user or is shared with them
         $isShared = \DB::table('share_contacts')
             ->where('contact_id', $contact->id)
             ->where('receiver_id', $authUserId)
             ->where('status', 'pending') // Ensure it's pending
             ->exists();
-    
-        if ($contact->user_id !== $authUserId && !$isShared) {
+
+        if ($contact->user_id !== $authUserId && ! $isShared) {
             abort(403, 'You do not have access to this contact.');
         }
-    
+
         return response()->json($contact);
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -156,11 +128,13 @@ class ContactController extends Controller
     }
 
     // Export to Excel
-
-    public function exportToExcel()
+    public function exportToExcel(Request $request)
     {
-        // Export the contacts to an Excel file
-        return Excel::download(new ContactsExport, 'contacts.xlsx');
+        $category = $request->category;
+        $filename = $category ? "contacts_{$category}.xlsx" : 'contacts_recents.xlsx';
+    
+        return Excel::download(new ContactsExport($category), $filename);
     }
+    
 
 }

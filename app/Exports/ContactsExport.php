@@ -8,17 +8,28 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class ContactsExport implements FromCollection, WithHeadings
 {
+    protected $category;
+
+    public function __construct($category = null)
+    {
+        $this->category = $category;
+    }
+
     public function collection()
     {
-        // Fetch the required columns for the export
-        // return Contact::select('name', 'email', 'phone', 'category')->get();
-        return Contact::where('user_id', auth()->id())->select('name', 'email', 'phone', 'category')->get();    
+        $query = Contact::where('user_id', auth()->id());
 
+        if ($this->category) {
+            $query->where('category', $this->category);
+        } else {
+            $query->where('created_at', '>=', now()->subDays(7));
+        }
+
+        return $query->select('name', 'email', 'phone', 'category')->get();
     }
 
     public function headings(): array
     {
-        // Define the column headings in the Excel file
         return ['Name', 'Email', 'Phone', 'Category'];
     }
 }
