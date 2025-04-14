@@ -37,11 +37,14 @@
                 </select>
             </div>
             <div class="mb-4 flex items-center space-x-2">
-                <button
+                <button type='button' onclick="addRelatedContact()"
                     class="flex items-center bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     <i class="fas fa-plus mr-2"></i>
                     Related Contacts
                 </button>
+            </div>
+            <div id="relatedContactsSection" class="mb-4">
+                <!-- Les paires de select seront ajoutées ici dynamiquement -->
             </div>
             <div class="flex justify-end">
                 <button type="button" onclick="closeModal('contactModal')"
@@ -56,3 +59,60 @@
         </form>
     </div>
 </div>
+
+<script>
+let relatedContactCount = 0;
+
+function addRelatedContact() {
+    if (relatedContactCount >= 3) {
+        alert('Vous ne pouvez pas ajouter plus de 3 relations');
+        return;
+    }
+
+    const relatedContactsSection = document.getElementById('relatedContactsSection');
+    const contactPair = document.createElement('div');
+    contactPair.className = 'mb-4 border p-4 rounded-lg';
+    contactPair.innerHTML = `
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="relatedContact${relatedContactCount}">
+                Contact lié
+            </label>
+            <select name="relatedContacts[]" id="relatedContact${relatedContactCount}"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <option value="">Sélectionner un contact</option>
+                <!-- Les contacts seront chargés dynamiquement ici -->
+            </select>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="relationshipType${relatedContactCount}">
+                Type de relation
+            </label>
+            <select name="relationshipTypes[]" id="relationshipType${relatedContactCount}"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <option value="">Sélectionner un type de relation</option>
+                <option value="friend">Ami</option>
+                <option value="sibling">Frère/Soeur</option>
+                <option value="cousin">Cousin(e)</option>
+                <option value="spouse">Conjoint(e)</option>
+                <option value="parent_of">Parent de</option>
+                <option value="child_of">Enfant de</option>
+                <option value="mentor_of">Mentor de</option>
+                <option value="mentee_of">Mentoré de</option>
+            </select>
+        </div>
+        <button type="button" onclick="removeRelatedContact(this)"
+            class="text-red-600 hover:text-red-800 text-sm">
+            <i class="fas fa-trash mr-1"></i>Supprimer cette relation
+        </button>
+    `;
+
+    relatedContactsSection.appendChild(contactPair);
+    relatedContactCount++;
+}
+
+function removeRelatedContact(button) {
+    const contactPair = button.parentElement;
+    contactPair.remove();
+    relatedContactCount--;
+}
+</script>
