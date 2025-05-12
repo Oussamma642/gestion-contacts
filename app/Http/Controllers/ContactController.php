@@ -70,6 +70,40 @@ class ContactController extends Controller
         $contact->user_id = Auth::id();
         $contact->save();
 
+        if ($request->has('relatedContacts') && $request->has('relationshipTypes')) {
+            $relatedContacts = $request->input('relatedContacts');
+            $typeRelations   = $request->input('relationshipTypes');
+
+            foreach ($relatedContacts as $index => $relatedContactId) {
+                if (empty($relatedContactId)) {
+                    continue;
+                }
+                // Ignorer les contacts vides
+
+                $type = $typeRelations[$index] ?? 'friend';
+
+                // Vérifier si la relation existe déjà
+                $existingRelation = \DB::table('related_persons')
+                    ->where(function ($query) use ($contact, $relatedContactId) {
+                        $query->where('personA', $contact->id)
+                            ->where('personB', $relatedContactId)
+                            ->orWhere('personA', $relatedContactId)
+                            ->where('personB', $contact->id);
+                    })
+                    ->exists();
+
+                if (! $existingRelation) {
+                    \DB::table('related_persons')->insert([
+                        'personA'    => $contact->id,
+                        'personB'    => $relatedContactId,
+                        'type'       => $type,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+        }
+
         return redirect()->route('dashboard')->with('success', 'Contact ajouté avec succès.');
     }
 
@@ -132,9 +166,22 @@ class ContactController extends Controller
     {
         $category = $request->category;
         $filename = $category ? "contacts_{$category}.xlsx" : 'contacts_recents.xlsx';
-    
+
         return Excel::download(new ContactsExport($category), $filename);
     }
-    
+
+    // API function to return contacts list for the reltaed contacts
+    public function getListOfContactsOfAuthUser()
+    {
+        try {
+            $contacts = Contact::where('user_id', Auth::id())
+                ->select('id', 'name', 'email', 'phone')
+                ->get();
+
+            return response()->json($contacts);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erreur lors de la récupération des contacts'], 500);
+        }
+    }
 
 }

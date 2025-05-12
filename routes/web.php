@@ -29,6 +29,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/related-contacts/{id}', [ContactController::class, 'relatedContacts'])->name('persons.RelatedPersons');
     // Crud ob Contacts [Updating, Delete]
     Route::resource('contacts', ContactController::class);
+    // API to return contacts list for the reltaed contacts
+    Route::get('/related-contacts', [ContactController::class, 'getListOfContactsOfAuthUser']);
 
     // Exporting contacts to excel format
     Route::get('/export-contacts', [ContactController::class, 'exportToExcel'])->name('export.contacts');

@@ -253,13 +253,86 @@ function setupCheckboxListeners() {
 
 // Call this when the page loads
 document.addEventListener('DOMContentLoaded', setupCheckboxListeners);
+let related_contacts_list = null;
+async function openAddModal() {
 
-function openAddModal() {
     document.getElementById('modalTitle').textContent = 'Nouveau contact';
     document.getElementById('contactForm').reset();
     document.getElementById('contactForm').action = "{{ route('contacts.store') }}";
     document.getElementById('contactModal').classList.remove('hidden');
+
+    try {
+        let response = await fetch('/related-contacts');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        related_contacts_list = await response.json();
+
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        alert('Erreur lors du chargement des contacts liés. Veuillez réessayer.');
+        return;
+    }
+
 }
+
+let relatedContactCount = 0;
+
+async function addRelatedContact() {
+    if (relatedContactCount >= 3) {
+        alert('Vous ne pouvez pas ajouter plus de 3 relations');
+        return;
+    }
+
+    const relatedContactsSection = document.getElementById('relatedContactsSection');
+    const contactPair = document.createElement('div');
+    contactPair.className = 'mb-4 border p-4 rounded-lg';
+    contactPair.innerHTML = `
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="relatedContact${relatedContactCount}">
+                Contact lié
+            </label>
+            <select name="relatedContacts[]" id="relatedContact${relatedContactCount}"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <option value="">Sélectionner un contact</option>
+                ${related_contacts_list.map(contact =>
+                    `<option value="${contact.id}">${contact.name}: (${contact.phone})</option>`
+                ).join('')}
+            </select>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="relationshipType${relatedContactCount}">
+                Type de relation
+            </label>
+            <select name="relationshipTypes[]" id="relationshipType${relatedContactCount}"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <option value="">Sélectionner un type de relation</option>
+                <option value="friend">Ami</option>
+                <option value="sibling">Frère/Soeur</option>
+                <option value="cousin">Cousin(e)</option>
+                <option value="spouse">Conjoint(e)</option>
+                <option value="parent_of">Parent de</option>
+                <option value="child_of">Enfant de</option>
+                <option value="mentor_of">Mentor de</option>
+                <option value="mentee_of">Mentoré de</option>
+            </select>
+        </div>
+        <button type="button" onclick="removeRelatedContact(this)"
+            class="text-red-600 hover:text-red-800 text-sm">
+            <i class="fas fa-trash mr-1"></i>Supprimer cette relation
+        </button>
+    `;
+
+    relatedContactsSection.appendChild(contactPair);
+    relatedContactCount++;
+}
+
+function removeRelatedContact(button) {
+    const contactPair = button.parentElement;
+    contactPair.remove();
+    relatedContactCount--;
+}
+
 
 function openEditModal(contactId) {
     document.getElementById('modalTitle').textContent = 'Modifier le contact';
