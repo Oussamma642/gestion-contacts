@@ -313,8 +313,6 @@ async function addRelatedContact() {
                 <option value="spouse">Conjoint(e)</option>
                 <option value="parent_of">Parent de</option>
                 <option value="child_of">Enfant de</option>
-                <option value="mentor_of">Mentor de</option>
-                <option value="mentee_of">Mentoré de</option>
             </select>
         </div>
         <button type="button" onclick="removeRelatedContact(this)"
