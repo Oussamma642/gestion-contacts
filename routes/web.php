@@ -2,9 +2,12 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\ShareController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+
+// use App\Services\GoogleContactsService;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,11 +41,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/users', [UserController::class, 'index']);
 
     // -----------------------------Routes for sharing contacts:
-        // Route for the List of shared contacts
+    // Route for the List of shared contacts
     Route::post('/share', [ShareController::class, 'share'])->name('share.contacts');
-        // Route for updating shared-contacts status
+    // Route for updating shared-contacts status
     Route::post('/share/update-status', [ShareController::class, 'updateStatus'])->name('share.updateStatus');
-        // Route to get number of pendign shared-contacts
+    // Route to get number of pendign shared-contacts
     Route::get('/shared-contacts', [ShareController::class, 'getPendingSharedContacts']);
 
     // Route for rejecting a shared-contact
@@ -50,6 +53,13 @@ Route::middleware(['auth'])->group(function () {
 
     // Route for accepting a shared-contact
     Route::post('/accept-shared-contact', [ShareController::class, 'accept']);
+
+    Route::prefix('google')->group(function () {
+        Route::get('auth', [GoogleAuthController::class, 'redirect'])->name('google.auth');
+        Route::get('callback', [GoogleAuthController::class, 'callback'])->name('google.callback');
+        Route::get('disconnect', [GoogleAuthController::class, 'disconnect'])->name('google.disconnect');
+        Route::get('status', [GoogleAuthController::class, 'isConnected'])->name('google.status');
+    });
 });
 
 // Routes d'authentification

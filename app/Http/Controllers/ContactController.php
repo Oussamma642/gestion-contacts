@@ -3,12 +3,23 @@ namespace App\Http\Controllers;
 
 use App\Exports\ContactsExport;
 use App\Models\Contact;
+use App\Services\GoogleContactsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+// ← import the Log facade
 
 class ContactController extends Controller
 {
+
+    protected $googleContactsService;
+
+    public function __construct(GoogleContactsService $googleContactsService)
+    {
+        $this->googleContactsService = $googleContactsService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -70,6 +81,7 @@ class ContactController extends Controller
         $contact->user_id = Auth::id();
         $contact->save();
 
+        // Related Contacts
         if ($request->has('relatedContacts') && $request->has('relationshipTypes')) {
             $relatedContacts = $request->input('relatedContacts');
             $typeRelations   = $request->input('relationshipTypes');
@@ -103,6 +115,38 @@ class ContactController extends Controller
                 }
             }
         }
+
+        // Synchronisation avec Google Contacts
+        try {
+            if (auth()->user()->google_access_token) {
+                $this->googleContactsService->setAccessToken(auth()->user()->google_access_token);
+                $googleContact = $this->googleContactsService->createContact([
+                    'name'  => $contact->name,
+                    'email' => $contact->email,
+                    'phone' => $contact->phone,
+                ]);
+
+                $contact->update(['google_contact_id' => $googleContact->id]);
+            }
+        } catch (\Exception $e) {
+            Log::error('Erreur de synchronisation Google: ' . $e->getMessage());
+        }
+
+        // Synchronisation avec Google Contacts
+        // try {
+        //     $googleContact = $this->googleContactsService->createContact([
+        //         'name'  => $contact->name,
+        //         'email' => $contact->email,
+        //         'phone' => $contact->phone,
+        //     ]);
+
+        //     // Sauvegarde de l'ID Google pour référence future
+        //     $contact->update(['google_contact_id' => $googleContact->id]);
+
+        // } catch (\Exception $e) {
+        //     Log::error('Erreur de synchronisation Google: ' . $e->getMessage());
+        //     // Vous pouvez choisir de notifier l'utilisateur ici
+        // }
 
         return redirect()->route('dashboard')->with('success', 'Contact ajouté avec succès.');
     }
