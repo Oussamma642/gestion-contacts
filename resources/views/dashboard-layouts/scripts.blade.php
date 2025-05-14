@@ -139,7 +139,7 @@ function openSharedContactsModal() {
                 tableBody.innerHTML += `
                     <tr data-share-id="${contact.share_id}">
                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${contact.name}</td>
-                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${contact.sender_name} Contact Id: ${contact.id} Shared-Contact Id: ${contact.share_id}</td>
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap"><b>${contact.sender_name}</b></td>
                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
                             <button type="button" onclick="acceptContact(${contact.id}, ${contact.share_id})" class="bg-blue-500 text-white px-2 py-1 rounded">Accept</button>
                             <button type="button" onclick="rejectContact(${contact.share_id})" class="bg-red-500 text-white px-2 py-1 rounded">Reject</button>

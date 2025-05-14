@@ -1,6 +1,17 @@
-@extends('home-layouts.app')
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionnaire de Contacts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+    function toggleMenu() {
+        const menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+    }
+    </script>
+</head>
 
-@section('content')
 <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8 bg-white p-4 sm:p-8 rounded-lg shadow-xl">
         <div>
@@ -77,22 +88,15 @@
             </div>
 
             <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                    <a href="#"
-                        class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                <!-- force this cell to span both columns -->
+                <div class="col-span-full">
+                    <a href="{{ route('google-auth') }}"
+                        class="block w-full text-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                         <i class="fab fa-google text-red-600"></i>
                         <span class="ml-2">Google</span>
-                    </a>
-                </div>
-                <div>
-                    <a href="#"
-                        class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                        <i class="fab fa-facebook text-blue-600"></i>
-                        <span class="ml-2">Facebook</span>
                     </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-@endsection
